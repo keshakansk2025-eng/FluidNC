@@ -191,7 +191,7 @@ namespace Spindles {
             vfd->setupSpeeds(_maxRPM);
             vfd->_slop = 300;
         }
-        VFDProtocol::response_parser GenericProtocol::initialization_sequence(int index, ModbusCommand& data, VFDSpindle* vfd) {
+        VFDProtocol::response_parser GenericProtocol::initialization_sequence(int32_t index, ModbusCommand& data, VFDSpindle* vfd) {
             // BUG:
             //
             // If we do:

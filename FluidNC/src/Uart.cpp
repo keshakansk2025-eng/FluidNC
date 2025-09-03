@@ -78,7 +78,7 @@ const char* decodeUartMode(std::string_view str, UartData& wordLength, UartParit
     return "";
 }
 
-Uart::Uart(int uart_num) : _uart_num(uart_num), _name("uart") {
+Uart::Uart(int32_t uart_num) : _uart_num(uart_num), _name("uart") {
     _name += std::to_string(uart_num);
 }
 
@@ -126,12 +126,12 @@ void Uart::begin() {
 
 int Uart::read() {
     if (_pushback != -1) {
-        int ret   = _pushback;
-        _pushback = -1;
+        int32_t ret = _pushback;
+        _pushback   = -1;
         return ret;
     }
     uint8_t c;
-    int     res = uart_read(_uart_num, &c, 1, 0);
+    int32_t res = uart_read(_uart_num, &c, 1, 0);
     return res == 1 ? c : -1;
 }
 
@@ -149,7 +149,7 @@ size_t Uart::write(const uint8_t* buffer, size_t length) {
 // }
 
 size_t Uart::timedReadBytes(char* buffer, size_t len, TickType_t timeout) {
-    int res = uart_read(_uart_num, (uint8_t*)buffer, len, timeout);
+    int32_t res = uart_read(_uart_num, (uint8_t*)buffer, len, timeout);
     // If res < 0, no bytes were read
     return res < 0 ? 0 : res;
 }
@@ -162,7 +162,7 @@ void Uart::forceXoff() {
     uart_xoff(_uart_num);
 }
 
-void Uart::setSwFlowControl(bool on, int xon_threshold, int xoff_threshold) {
+void Uart::setSwFlowControl(bool on, int32_t xon_threshold, int32_t xoff_threshold) {
     _sw_flowcontrol_enabled = on;
     _xon_threshold          = xon_threshold;
     _xoff_threshold         = xoff_threshold;
@@ -176,7 +176,7 @@ void Uart::getSwFlowControl(bool& enabled, int& xon_threshold, int& xoff_thresho
 bool Uart::setHalfDuplex() {
     return uart_half_duplex(_uart_num);
 }
-bool Uart::setPins(int tx_pin, int rx_pin, int rts_pin, int cts_pin) {
+bool Uart::setPins(int32_t tx_pin, int32_t rx_pin, int32_t rts_pin, int32_t cts_pin) {
     return uart_pins(_uart_num, tx_pin, rx_pin, rts_pin, cts_pin);
 }
 bool Uart::flushTxTimed(TickType_t ticks) {
@@ -187,7 +187,7 @@ void Uart::config_message(const char* prefix, const char* usage) {
     log_info(prefix << usage << " Tx:" << _txd_pin.name() << " Rx:" << _rxd_pin.name() << " RTS:" << _rts_pin.name() << " Baud:" << _baud);
 }
 
-int Uart::rx_buffer_available(void) {
+int32_t Uart::rx_buffer_available(void) {
     return uart_bufavail(_uart_num);
 }
 
@@ -195,7 +195,7 @@ int Uart::peek() {
     if (_pushback != -1) {
         return _pushback;
     }
-    int ch = read();
+    int32_t ch = read();
     if (ch == -1) {
         return -1;
     }

@@ -35,15 +35,15 @@ void TwoWire::Clear() {
 // TwoWire interface:
 
 // call setPins() first, so that begin() can be called without arguments from libraries
-bool TwoWire::setPins(int sda, int scl) {
+bool TwoWire::setPins(int32_t sda, int32_t scl) {
     return true;
 }
 
-bool TwoWire::begin(int sda, int scl, uint32_t frequency) {
+bool TwoWire::begin(int32_t sda, int32_t scl, uint32_t frequency) {
     return true;
 }  // returns true, if successful init of i2c bus
 
-bool TwoWire::begin(uint8_t slaveAddr, int sda, int scl, uint32_t frequency) {
+bool TwoWire::begin(uint8_t slaveAddr, int32_t sda, int32_t scl, uint32_t frequency) {
     return true;
 }
 bool TwoWire::end() {
@@ -70,7 +70,7 @@ void TwoWire::beginTransmission(uint8_t address) {
     Assert(!inTransmission, "Already in a transmission");
     inTransmission = true;
 }
-void TwoWire::beginTransmission(int address) {
+void TwoWire::beginTransmission(int32_t address) {
     Assert(!inTransmission, "Already in a transmission");
     inTransmission = true;
 }
@@ -113,10 +113,10 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t size, uint8_t sendStop) {
 uint8_t TwoWire::requestFrom(uint8_t address, uint8_t size) {
     return uint8_t(requestFrom(address, size_t(size), false));
 }
-uint8_t TwoWire::requestFrom(int address, int size, int sendStop) {
+uint8_t TwoWire::requestFrom(int32_t address, int32_t size, int32_t sendStop) {
     return uint8_t(requestFrom(uint16_t(address), size_t(size), sendStop != 0));
 }
-uint8_t TwoWire::requestFrom(int address, int size) {
+uint8_t TwoWire::requestFrom(int32_t address, int32_t size) {
     return uint8_t(requestFrom(uint16_t(address), size_t(size), false));
 }
 

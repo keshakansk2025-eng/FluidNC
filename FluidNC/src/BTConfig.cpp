@@ -69,13 +69,13 @@ namespace WebUI {
         return str;
     }
 
-    int BTChannel::available() {
+    int32_t BTChannel::available() {
         return SerialBT.available();
     }
-    int BTChannel::read() {
+    int32_t BTChannel::read() {
         return SerialBT.read();
     }
-    int BTChannel::peek() {
+    int32_t BTChannel::peek() {
         return SerialBT.peek();
     }
 

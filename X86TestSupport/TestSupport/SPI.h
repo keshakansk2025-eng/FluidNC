@@ -2,7 +2,7 @@
 
 class SPIClass {
 public:
-    void begin(int sck, int miso, int mosi) { /* TODO */
+    void begin(int32_t sck, int32_t miso, int32_t mosi) { /* TODO */
     }
 };
 

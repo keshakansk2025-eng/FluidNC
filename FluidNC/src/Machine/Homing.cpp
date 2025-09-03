@@ -170,7 +170,7 @@ namespace Machine {
 
         AxisMask axesMask = 0;
         // Find the axis that will take the longest
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             if (bitnum_is_false(motors, Machine::Axes::motor_bit(axis, 0)) && bitnum_is_false(motors, Machine::Axes::motor_bit(axis, 1))) {
                 continue;
             }
@@ -266,7 +266,7 @@ namespace Machine {
         // take the longest time to reach its max range at its seek rate, preserving
         // the speeds of the axes.
 
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             if (bitnum_is_true(axesMask, axis)) {
                 if (phase == Machine::Homing::Phase::FastApproach) {
                     // For fast approach the vector direction is determined by the rates
@@ -415,7 +415,7 @@ namespace Machine {
 
         auto axes   = config->_axes;
         auto n_axis = axes->_numberAxis;
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             if (bitnum_is_false(squaredAxes, axis)) {
                 continue;
             }
@@ -489,7 +489,7 @@ namespace Machine {
 
         // Find any cycles that set the m_pos without motion
         auto n_axis = Axes::_numberAxis;
-        for (int axis = X_AXIS; axis < n_axis; axis++) {
+        for (int32_t axis = X_AXIS; axis < n_axis; axis++) {
             auto homing = Axes::_axis[axis]->_homing;
             if (homing && homing->_cycle == set_mpos_only) {
                 if (axisMask == 0 || axisMask & 1 << axis) {
@@ -515,7 +515,7 @@ namespace Machine {
             // Run all homing cycles
             bool someAxisHomed = false;
 
-            for (int cycle = 1; cycle <= MAX_N_AXIS; cycle++) {
+            for (int32_t cycle = 1; cycle <= MAX_N_AXIS; cycle++) {
                 // Set axisMask to the axes that home on this cycle
                 axisMask = axis_mask_from_cycle(cycle);
 
@@ -536,10 +536,10 @@ namespace Machine {
         nextCycle();
     }
 
-    AxisMask Homing::axis_mask_from_cycle(int cycle) {
+    AxisMask Homing::axis_mask_from_cycle(int32_t cycle) {
         AxisMask axisMask = 0;
         auto     n_axis   = Axes::_numberAxis;
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             auto axisConfig = Axes::_axis[axis];
             auto homing     = axisConfig->_homing;
             if (homing && homing->_cycle == cycle) {

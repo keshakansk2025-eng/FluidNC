@@ -12,7 +12,7 @@ namespace Pins {
     // the top of the list. Note that this list must match the list
     // in capabilities _exactly_!
 
-    const int     START_LINE = __LINE__ + 1;
+    const int32_t     START_LINE = __LINE__ + 1;
     PinAttributes PinAttributes::Input(1 << (__LINE__ - START_LINE));
     PinAttributes PinAttributes::Output(1 << (__LINE__ - START_LINE));
     PinAttributes PinAttributes::PullUp(1 << (__LINE__ - START_LINE));
@@ -24,7 +24,7 @@ namespace Pins {
     PinAttributes PinAttributes::ADC(1 << (__LINE__ - START_LINE));
     PinAttributes PinAttributes::DAC(1 << (__LINE__ - START_LINE));
 
-    const int     capabilityMask = (1 << (__LINE__ - START_LINE)) - 1;  // -------- Mask capabilities till here
+    const int32_t     capabilityMask = (1 << (__LINE__ - START_LINE)) - 1;  // -------- Mask capabilities till here
     PinAttributes PinAttributes::ActiveLow(1 << (__LINE__ - START_LINE));
     PinAttributes PinAttributes::Exclusive(1 << (__LINE__ - START_LINE));  // \/       These are attributes
     PinAttributes PinAttributes::InitialOn(1 << (__LINE__ - START_LINE));  // \/       These are attributes

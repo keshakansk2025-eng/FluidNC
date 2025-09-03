@@ -34,7 +34,8 @@ public:
                 log_info("Start OTA updating " << type);
             })
             .onEnd([]() { log_info("End OTA"); })
-            .onProgress([](unsigned int progress, unsigned int total) { log_info("OTA Progress: " << (progress / (total / 100)) << "%"); })
+            .onProgress(
+                [](unsigned int32_t progress, unsigned int32_t total) { log_info("OTA Progress: " << (progress / (total / 100)) << "%"); })
             .onError([](ota_error_t error) {
                 const char* errorName;
                 switch (error) {

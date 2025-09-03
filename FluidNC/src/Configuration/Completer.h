@@ -10,7 +10,7 @@ namespace Configuration {
     class Completer : public Configuration::HandlerBase {
     private:
         std::string _key;
-        int         _reqMatch;
+        int32_t     _reqMatch;
         char*       _matchedStr;
         std::string _currentPath;
 
@@ -21,9 +21,9 @@ namespace Configuration {
         bool matchesUninitialized(const char* name) override { return false; }
 
     public:
-        Completer(const char* key, int requestedMatch, char* matchedStr);
+        Completer(const char* key, int32_t requestedMatch, char* matchedStr);
 
-        int _numMatches;
+        int32_t _numMatches;
 
         void item(const char* name);
         void item(const char* name, bool& value) override { item(name); }
@@ -33,12 +33,12 @@ namespace Configuration {
         void item(const char* name, std::vector<speedEntry>& value) override { item(name); }
         void item(const char* name, std::vector<float>& value) override { item(name); }
         void item(const char* name, UartData& wordLength, UartParity& parity, UartStop& stopBits) override { item(name); }
-        void item(const char* name, std::string& value, const int minLength, const int maxLength) override { item(name); }
+        void item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) override { item(name); }
         void item(const char* name, EventPin& value) { item(name); }
         void item(const char* name, Pin& value) { item(name); }
         void item(const char* name, Macro& value) { item(name); }
         void item(const char* name, IPAddress& value) override { item(name); }
-        void item(const char* name, int& value, const EnumItem* e) override { item(name); }
+        void item(const char* name, int32_t& value, const EnumItem* e) override { item(name); }
 
         HandlerType handlerType() override { return HandlerType::Completer; }
 

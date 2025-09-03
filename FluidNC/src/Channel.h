@@ -33,21 +33,21 @@ class Channel : public Stream {
 private:
     void pin_event(uint32_t pinnum, bool active);
 
-    static constexpr int PinACK = 0xB2;
-    static constexpr int PinNAK = 0xB3;
-    static constexpr int PinRST = 0xB4;
+    static constexpr int32_t PinACK = 0xB2;
+    static constexpr int32_t PinNAK = 0xB3;
+    static constexpr int32_t PinRST = 0xB4;
 
-    static constexpr int timeout = 2000;
+    static constexpr int32_t timeout = 2000;
 
 public:
-    static constexpr int PinLowFirst  = 0x100;
-    static constexpr int PinLowLast   = 0x13f;
-    static constexpr int PinHighFirst = 0x140;
-    static constexpr int PinHighLast  = 0x17f;
+    static constexpr int32_t PinLowFirst  = 0x100;
+    static constexpr int32_t PinLowLast   = 0x13f;
+    static constexpr int32_t PinHighFirst = 0x140;
+    static constexpr int32_t PinHighLast  = 0x17f;
 
-    static constexpr int maxLine = 255;
+    static constexpr int32_t maxLine = 255;
 
-    int _message_level = MsgLevelVerbose;
+    int32_t _message_level = MsgLevelVerbose;
 
 protected:
     std::string _name;
@@ -90,10 +90,10 @@ protected:
 public:
     explicit Channel(const std::string& name, bool addCR = false);
     explicit Channel(const char* name, bool addCR = false);
-    Channel(const char* name, int num, bool addCR = false);
+    Channel(const char* name, int32_t num, bool addCR = false);
     virtual ~Channel() = default;
 
-    int _ackwait = 0;  // 1 - waiting, 0 - ACKed, -1 - NAKed
+    int32_t _ackwait = 0;  // 1 - waiting, 0 - ACKed, -1 - NAKed
 
     virtual void       init() {}
     virtual void       handle() {}
@@ -115,7 +115,7 @@ public:
     // the remaining space that mechanism has available.
     // The queue can handle more than 256 characters but we don't want it to get too
     // large, so we report a limited size.
-    virtual int rx_buffer_available() { return std::max(0, 256 - int(_queue.size())); }
+    virtual int32_t rx_buffer_available() { return std::max(0, 256 - int(_queue.size())); }
 
     // flushRx() discards any characters that have already been received.  It is used
     // after a reset, so that anything already sent will not be processed.

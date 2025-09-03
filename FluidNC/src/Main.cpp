@@ -165,7 +165,7 @@ void setup() {
 
 void loop() {
     vTaskPrioritySet(NULL, 2);
-    static int tries = 0;
+    static int32_t tries = 0;
     try {
         // Start the main loop. Processes program inputs and executes them.
         // This can exit on a system abort condition, in which case run_once()

@@ -7,13 +7,13 @@
 #include "hal/uart_hal.h"
 #include "Protocol.h"
 
-const int PINNUM_MAX                        = 64;
-InputPin* objects[UART_NUM_MAX][PINNUM_MAX] = { nullptr };
-uint8_t   last[UART_NUM_MAX]                = { 0 };
+const int32_t PINNUM_MAX                        = 64;
+InputPin*     objects[UART_NUM_MAX][PINNUM_MAX] = { nullptr };
+uint8_t       last[UART_NUM_MAX]                = { 0 };
 
 void uart_data_callback(uart_port_t uart_num, uint8_t* buf, int* len) {
-    int in_len = *len;
-    int in, out;
+    int32_t in_len = *len;
+    int32_t in, out;
     for (in = 0, out = 0; in < in_len; in++, out++) {
         uint8_t c = buf[in];
         if (out != in) {
@@ -33,13 +33,14 @@ void uart_data_callback(uart_port_t uart_num, uint8_t* buf, int* len) {
     }
     *len = out;
 }
-void uart_register_input_pin(int uart_num, uint8_t pinnum, InputPin* object) {
+void uart_register_input_pin(int32_t uart_num, uint8_t pinnum, InputPin* object) {
     objects[uart_num][pinnum] = object;
     last[uart_num]            = 0;
 }
 
 static void uart_driver_n_install(void* arg) {
-    uart_port_t port = (uart_port_t)arg;
+    uintptr_t   value = reinterpret_cast<uintptr_t>(arg);
+    uart_port_t port  = static_cast<uart_port_t>(value);
     if (port) {
         fnc_uart_driver_install(port, 256, 0, 0, NULL, ESP_INTR_FLAG_IRAM);
     } else {
@@ -47,7 +48,7 @@ static void uart_driver_n_install(void* arg) {
     }
 }
 
-void uart_init(int uart_num) {
+void uart_init(int32_t uart_num) {
     // We init UARTs on core 0 so the interrupt handler runs there,
     // thus avoiding conflict with the StepTimer interrupt
     esp_ipc_call_blocking(0, uart_driver_n_install, (void*)uart_num);
@@ -75,7 +76,7 @@ std::map<UartParity, uart_parity_t> parity_mode = {
     { UartParity::Odd, UART_PARITY_ODD },
 };
 
-void uart_mode(int uart_num, unsigned long baud, UartData dataBits, UartParity parity, UartStop stopBits) {
+void uart_mode(int32_t uart_num, unsigned long baud, UartData dataBits, UartParity parity, UartStop stopBits) {
     uart_config_t conf;
     conf.source_clk          = UART_SCLK_APB;
     conf.baud_rate           = baud;
@@ -93,7 +94,7 @@ void uart_mode(int uart_num, unsigned long baud, UartData dataBits, UartParity p
     }
 }
 
-bool uart_half_duplex(int uart_num) {
+bool uart_half_duplex(int32_t uart_num) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
         return fnc_uart_set_mode(port, UART_MODE_RS485_HALF_DUPLEX) != ESP_OK;
@@ -102,7 +103,7 @@ bool uart_half_duplex(int uart_num) {
     }
 }
 
-int uart_read(int uart_num, uint8_t* buf, int len, int timeout_ms) {
+int32_t uart_read(int32_t uart_num, uint8_t* buf, int32_t len, int32_t timeout_ms) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
         return fnc_uart_read_bytes(port, buf, len, timeout_ms);
@@ -110,7 +111,7 @@ int uart_read(int uart_num, uint8_t* buf, int len, int timeout_ms) {
         return uart_read_bytes(port, buf, len, timeout_ms);
     }
 }
-int uart_write(int uart_num, const uint8_t* buf, int len) {
+int32_t uart_write(int32_t uart_num, const uint8_t* buf, int32_t len) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
         return fnc_uart_write_bytes(port, buf, len);
@@ -118,15 +119,15 @@ int uart_write(int uart_num, const uint8_t* buf, int len) {
         return uart_write_bytes(port, buf, len);
     }
 }
-void uart_xon(int uart_num) {
+void uart_xon(int32_t uart_num) {
     uart_port_t port = (uart_port_t)uart_num;
     uart_ll_force_xon(port);
 }
-void uart_xoff(int uart_num) {
+void uart_xoff(int32_t uart_num) {
     uart_port_t port = (uart_port_t)uart_num;
     uart_ll_force_xoff(port);
 }
-void uart_sw_flow_control(int uart_num, bool on, int xon_threshold, int xoff_threshold) {
+void uart_sw_flow_control(int32_t uart_num, bool on, int32_t xon_threshold, int32_t xoff_threshold) {
     if (xon_threshold <= 0) {
         xon_threshold = 126;
     }
@@ -140,18 +141,18 @@ void uart_sw_flow_control(int uart_num, bool on, int xon_threshold, int xoff_thr
         uart_set_sw_flow_ctrl(port, on, xon_threshold, xoff_threshold);
     }
 }
-bool uart_pins(int uart_num, int tx_pin, int rx_pin, int rts_pin, int cts_pin) {
+bool uart_pins(int32_t uart_num, int32_t tx_pin, int32_t rx_pin, int32_t rts_pin, int32_t cts_pin) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
-        return fnc_uart_set_pin(uart_num, tx_pin, rx_pin, rts_pin, cts_pin) != ESP_OK;
+        return fnc_uart_set_pin(port, tx_pin, rx_pin, rts_pin, cts_pin) != ESP_OK;
     } else {
-        return uart_set_pin(uart_num, tx_pin, rx_pin, rts_pin, cts_pin) != ESP_OK;
+        return uart_set_pin(port, tx_pin, rx_pin, rts_pin, cts_pin) != ESP_OK;
     }
 }
-int uart_bufavail(int uart_num) {
-    return UART_FIFO_LEN - uart_buflen(uart_num);
+int32_t uart_bufavail(int32_t uart_num) {
+    return UART_HW_FIFO_LEN(uart_num) - uart_buflen(uart_num);
 }
-int uart_buflen(int uart_num) {
+int32_t uart_buflen(int32_t uart_num) {
     size_t      size;
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
@@ -161,7 +162,7 @@ int uart_buflen(int uart_num) {
     }
     return size;
 }
-void uart_discard_input(int uart_num) {
+void uart_discard_input(int32_t uart_num) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
         fnc_uart_flush_input(port);
@@ -169,7 +170,7 @@ void uart_discard_input(int uart_num) {
         uart_flush_input(port);
     }
 }
-bool uart_wait_output(int uart_num, int timeout_ms) {
+bool uart_wait_output(int32_t uart_num, int32_t timeout_ms) {
     uart_port_t port = (uart_port_t)uart_num;
     if (port) {
         return fnc_uart_wait_tx_done(port, timeout_ms) != ESP_OK;

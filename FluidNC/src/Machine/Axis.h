@@ -15,17 +15,17 @@ namespace MotorDrivers {
 
 namespace Machine {
     class Axis : public Configuration::Configurable {
-        int _axis;
-        int motorsWithSwitches();
+        int32_t _axis;
+        int32_t motorsWithSwitches();
 
     public:
-        Axis(int currentAxis) : _axis(currentAxis) {
-            for (int i = 0; i < MAX_MOTORS_PER_AXIS; ++i) {
+        Axis(int32_t currentAxis) : _axis(currentAxis) {
+            for (int32_t i = 0; i < MAX_MOTORS_PER_AXIS; ++i) {
                 _motors[i] = nullptr;
             }
         }
 
-        static const int MAX_MOTORS_PER_AXIS = 2;
+        static const int32_t MAX_MOTORS_PER_AXIS = 2;
 
         Motor*  _motors[MAX_MOTORS_PER_AXIS];
         Homing* _homing = nullptr;

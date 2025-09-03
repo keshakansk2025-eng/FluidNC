@@ -4,9 +4,9 @@
 
 #ifdef ESP32
 
-extern "C" int  __digitalRead(uint8_t pin);
-extern "C" void __pinMode(uint8_t pin, uint8_t mode);
-extern "C" void __digitalWrite(uint8_t pin, uint8_t val);
+extern "C" int32_t __digitalRead(uint8_t pin);
+extern "C" void    __pinMode(uint8_t pin, uint8_t mode);
+extern "C" void    __digitalWrite(uint8_t pin, uint8_t val);
 
 namespace Pins {
     Test(BasicGPIO, ReadGPIORaw) {

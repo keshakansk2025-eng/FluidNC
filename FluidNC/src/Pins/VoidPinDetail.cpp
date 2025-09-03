@@ -4,7 +4,7 @@
 #include "VoidPinDetail.h"
 
 namespace Pins {
-    VoidPinDetail::VoidPinDetail(int number) : PinDetail(number) {}
+    VoidPinDetail::VoidPinDetail(int32_t number) : PinDetail(number) {}
     VoidPinDetail::VoidPinDetail(const PinOptionsParser& options) : VoidPinDetail() {}
 
     // cppcheck-suppress unusedFunction
@@ -14,9 +14,9 @@ namespace Pins {
     }
 
     // cppcheck-suppress unusedFunction
-    void IRAM_ATTR VoidPinDetail::write(int high) {}
+    void IRAM_ATTR VoidPinDetail::write(int32_t high) {}
     // cppcheck-suppress unusedFunction
-    int VoidPinDetail::read() {
+    int32_t VoidPinDetail::read() {
         return 0;
     }
     // cppcheck-suppress unusedFunction

@@ -13,7 +13,7 @@
 
 Channel::Channel(const std::string& name, bool addCR) : _name(name), _linelen(0), _addCR(addCR) {}
 Channel::Channel(const char* name, bool addCR) : _name(name), _linelen(0), _addCR(addCR) {}
-Channel::Channel(const char* name, int num, bool addCR) : _name(name) {
+Channel::Channel(const char* name, int32_t num, bool addCR) : _name(name) {
     _name += std::to_string(num);
     _linelen = 0;
     _addCR   = addCR;
@@ -160,7 +160,7 @@ void Channel::handleRealtimeCharacter(uint8_t ch) {
         // glitch conditions.
         return;
     }
-    int res = _utf8.decode(ch, cmd);
+    int32_t res = _utf8.decode(ch, cmd);
     if (res == -1) {
         // This can be caused by line noise on an unpowered pendant
         log_debug("UTF8 decoding error " << to_hex(ch) << " " << to_hex(cmd));
@@ -212,7 +212,7 @@ Error Channel::pollLine(char* line) {
     }
     handle();
     while (1) {
-        int ch = -1;
+        int32_t ch = -1;
         if (line && _queue.size()) {
             ch = _queue.front();
             _queue.pop();
@@ -354,7 +354,7 @@ bool Channel::is_visible(const std::string& stem, std::string extension, bool is
 
     // common gcode extensions
     std::string_view extensions(".g .gc .gco .gcode .nc .ngc .ncc .txt .cnc .tap");
-    int              pos = 0;
+    int32_t          pos = 0;
     while (extensions.length()) {
         auto             next_pos       = extensions.find_first_of(' ', pos);
         std::string_view next_extension = extensions.substr(0, next_pos);

@@ -15,7 +15,7 @@ namespace Machine {
         UserOutputs();
 
         Pin _analogOutput[MaxUserAnalogPin];
-        int _analogFrequency[MaxUserAnalogPin];
+        int32_t _analogFrequency[MaxUserAnalogPin];
         Pin _digitalOutput[MaxUserDigitalPin];
 
         void init();

@@ -136,7 +136,7 @@ TEST(PinOptionsParser, TwoArgWithValues) {
 
 static void test_for_loop(const PinOptionsParser& parser) {
     // Typical use is a for loop. Let's test the two ways to use it:
-    int ctr = 0;
+    int32_t ctr = 0;
     for (auto it : parser) {
         if (ctr == 0) {
             ASSERT_TRUE(it.is("first")) << "Expected 'first'";
@@ -151,7 +151,7 @@ static void test_for_loop(const PinOptionsParser& parser) {
 
 static void test_for_loop_only_first(const PinOptionsParser& parser) {
     // Typical use is a for loop. Let's test the two ways to use it:
-    int ctr = 0;
+    int32_t ctr = 0;
     for (auto it : parser) {
         if (ctr == 0) {
             ASSERT_TRUE(it.is("first")) << "Expected 'first'";

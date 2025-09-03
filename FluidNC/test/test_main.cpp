@@ -6,7 +6,7 @@
 #    include "unity.h"
 
 void test_blank() {
-    int i = 5;
+    int32_t i = 5;
     TEST_ASSERT_EQUAL(i, 5);
 }
 

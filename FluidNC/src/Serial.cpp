@@ -63,7 +63,7 @@ static TaskHandle_t channelCheckTaskHandle = 0;
 void heapCheckTask(void* pvParameters) {
     static uint32_t heapSize = 0;
     while (true) {
-        std::atomic_thread_fence(std::memory_order::memory_order_seq_cst);  // read fence for settings and whatnot
+        std::atomic_thread_fence(std::memory_order::seq_cst);  // read fence for settings and whatnot
         uint32_t newHeapSize = xPortGetFreeHeapSize();
         if (newHeapSize != heapSize) {
             heapSize = newHeapSize;
@@ -222,7 +222,7 @@ Channel* pollChannels(char* line) {
     // planner buffer starvation due to not calling Stepper::prep_buffer()
     // frequently enough, which is normally called periodically at the end
     // of protocol_exec_rt_system() via protocol_execute_realtime().
-    static int counter = 0;
+    static int32_t counter = 0;
     if (line) {
         counter = 0;
     }

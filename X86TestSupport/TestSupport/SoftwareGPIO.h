@@ -9,12 +9,12 @@ struct SoftwarePin {
     SoftwarePin() : callback(), argument(nullptr), mode(0), driverValue(false), padValue(false), pinMode(0) {}
 
     void (*callback)(void*, bool v);
-    void* argument;
-    int   mode;
+    void*   argument;
+    int32_t mode;
 
-    bool driverValue;
-    bool padValue;
-    int  pinMode;
+    bool    driverValue;
+    bool    padValue;
+    int32_t pinMode;
 
     void handleISR(bool nv) { callback(argument, nv); }
 
@@ -32,7 +32,7 @@ struct SoftwarePin {
         if (oldval != newval) {
             std::default_random_engine       generator;
             std::normal_distribution<double> distribution(5, 2);
-            int                              count = int(distribution(generator));
+            int32_t                          count = int(distribution(generator));
 
             // Bound it a bit
             if (count < 0) {
@@ -43,7 +43,7 @@ struct SoftwarePin {
             count = count * 2 + 1;  // make it odd.
 
             auto currentVal = oldval;
-            for (int i = 0; i < count; ++i) {
+            for (int32_t i = 0; i < count; ++i) {
                 currentVal = !currentVal;
                 handlePadChange(currentVal);
             }
@@ -75,7 +75,7 @@ struct SoftwarePin {
     }
 };
 
-typedef void (*HandleCircuit)(SoftwarePin* pins, int pin, bool value);
+typedef void (*HandleCircuit)(SoftwarePin* pins, int32_t pin, bool value);
 
 class SoftwareGPIO {
     SoftwareGPIO() {}
@@ -93,7 +93,7 @@ public:
 
     static void reset(HandleCircuit circuit, bool circuitHandlesHystesis) {
         auto& inst = instance();
-        for (int i = 0; i < 256; ++i) {
+        for (int32_t i = 0; i < 256; ++i) {
             inst.pins[i].reset();
         }
 
@@ -101,7 +101,7 @@ public:
         inst.circuitHandlesHystesis = circuitHandlesHystesis;
     }
 
-    void setMode(int index, int mode) {
+    void setMode(int32_t index, int32_t mode) {
         auto& pin              = pins[index];
         auto  oldModeHasOutput = (pin.pinMode & OUTPUT) == OUTPUT;
         pin.pinMode            = mode;
@@ -116,7 +116,7 @@ public:
         }
     }
 
-    void writeOutput(int index, bool value) {
+    void writeOutput(int32_t index, bool value) {
         auto oldValue = pins[index].padValue;
 
         if ((pins[index].pinMode & OUTPUT) == OUTPUT) {
@@ -132,9 +132,9 @@ public:
         }
     }
 
-    bool read(int index) const { return pins[index].padValue; }
+    bool read(int32_t index) const { return pins[index].padValue; }
 
-    void attachISR(int index, void (*callback)(void* arg, bool v), void* arg, int mode) {
+    void attachISR(int32_t index, void (*callback)(void* arg, bool v), void* arg, int32_t mode) {
         auto& pin = pins[index];
         Assert(pin.mode == 0, "ISR mode should be 0 when attaching interrupt. Another interrupt is already attached.");
 
@@ -143,7 +143,7 @@ public:
         pin.mode     = mode;
     }
 
-    void detachISR(int index) {
+    void detachISR(int32_t index) {
         auto& pin    = pins[index];
         pin.mode     = 0;
         pin.argument = nullptr;

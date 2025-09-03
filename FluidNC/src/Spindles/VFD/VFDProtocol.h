@@ -13,7 +13,7 @@ namespace Spindles {
         public:
             using response_parser = bool (*)(const uint8_t* response, VFDSpindle* spindle, VFDProtocol* detail);
 
-            static const int VFD_RS485_MAX_MSG_SIZE = 16;  // more than enough for a modbus message
+            static const int32_t VFD_RS485_MAX_MSG_SIZE = 16;  // more than enough for a modbus message
 
             struct ModbusCommand {
                 bool critical;  // TODO SdB: change into `uint8_t critical : 1;`: We want more flags...
@@ -35,7 +35,7 @@ namespace Spindles {
 
             // Commands that return the status. Returns nullptr if unavailable by this VFD (default):
 
-            virtual response_parser initialization_sequence(int index, ModbusCommand& data, VFDSpindle* vfd) { return nullptr; }
+            virtual response_parser initialization_sequence(int32_t index, ModbusCommand& data, VFDSpindle* vfd) { return nullptr; }
             virtual response_parser get_current_speed(ModbusCommand& data) { return nullptr; }
             virtual response_parser get_current_direction(ModbusCommand& data) { return nullptr; }
             virtual response_parser get_status_ok(ModbusCommand& data) = 0;
@@ -64,7 +64,7 @@ namespace Spindles {
             static TaskHandle_t  vfd_cmdTaskHandle;
             static void          vfd_cmd_task(void* pvParameters);
 
-            static uint16_t ModRTU_CRC(uint8_t* buf, int msg_len);
+            static uint16_t ModRTU_CRC(uint8_t* buf, int32_t msg_len);
             bool            prepareSetModeCommand(SpindleState mode, ModbusCommand& data, VFDSpindle* spindle);
             bool            prepareSetSpeedCommand(uint32_t speed, ModbusCommand& data, VFDSpindle* spindle);
 

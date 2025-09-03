@@ -12,11 +12,11 @@ class SSD1306_I2C : public OLEDDisplay {
 private:
     uint8_t _address;
     Machine::I2CBus* _i2c;
-    int     _frequency;
+    int32_t     _frequency;
     bool    _error = false;
 
 public:
-    SSD1306_I2C(uint8_t address, OLEDDISPLAY_GEOMETRY g, Machine::I2CBus* i2c, int frequency);
+    SSD1306_I2C(uint8_t address, OLEDDISPLAY_GEOMETRY g, Machine::I2CBus* i2c, int32_t frequency);
     bool connect();
     void display(void);
 

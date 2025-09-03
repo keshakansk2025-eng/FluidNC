@@ -183,7 +183,7 @@ namespace Kinematics {
         float*    current_position = get_mpos();
         MotorMask lim_pin_state    = limits_get_state();
 
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             auto axisSetting = axes->_axis[axis];
             // If the axis is moving from the current location and soft limits are on.
             if (axisSetting->_softLimits && target[axis] != current_position[axis]) {
@@ -239,7 +239,7 @@ namespace Kinematics {
         auto axes   = config->_axes;
         auto n_axis = Axes::_numberAxis;
 
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             float coordinate = cartesian[axis];
             if (axes->_axis[axis]->_softLimits && (coordinate < limitsMinPosition(axis) || coordinate > limitsMaxPosition(axis))) {
                 limit_error(axis, coordinate);
@@ -254,7 +254,7 @@ namespace Kinematics {
         return mc_move_motors(target, pl_data);
     }
 
-    void Cartesian::motors_to_cartesian(float* cartesian, float* motors, int n_axis) {
+    void Cartesian::motors_to_cartesian(float* cartesian, float* motors, int32_t n_axis) {
         // Motor space is cartesian space, so we do no transform.
         copyAxes(cartesian, motors);
     }
@@ -292,7 +292,7 @@ namespace Kinematics {
     void Cartesian::releaseMotors(AxisMask axisMask, MotorMask motors) {
         auto axes   = config->_axes;
         auto n_axis = axes->_numberAxis;
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             if (bitnum_is_true(axisMask, axis)) {
                 if (bitnum_is_true(motors, Machine::Axes::motor_bit(axis, 0))) {
                     Stepping::unlimit(axis, 0);

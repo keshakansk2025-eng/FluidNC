@@ -130,7 +130,7 @@
 
     If you then set 12000 RPM, it calculates the frequency:
 
-        int targetFrequency = targetRPM * PD005 / MaxRPM = targetRPM * PD005 / (PD005 * PD144 / 50) = 
+        int32_t targetFrequency = targetRPM * PD005 / MaxRPM = targetRPM * PD005 / (PD005 * PD144 / 50) = 
                               targetRPM * 50 / PD144 = 12000 * 50 / 3000 = 200
 
     If the frequency is -say- 25 Hz, Huanyang wants us to send 2500 (eg. 25.00 Hz).
@@ -188,7 +188,7 @@ namespace Spindles {
             // Frequency comes from a conversion of revolutions per second to revolutions per minute
             // (factor of 60) and a factor of 2 from counting the number of poles. E.g. rpm * 120 / 100.
 
-            // int targetFrequency = targetRPM * PD005 / MaxRPM
+            // int32_t targetFrequency = targetRPM * PD005 / MaxRPM
             // = targetRPM * PD005 / (PD005 * PD144 / 50)
             // = targetRPM * 50 / PD144
             //
@@ -210,7 +210,7 @@ namespace Spindles {
         }
 
         // This gets data from the VFS. It does not set any values
-        VFDProtocol::response_parser HuanyangProtocol::initialization_sequence(int index, ModbusCommand& data, VFDSpindle* vfd) {
+        VFDProtocol::response_parser HuanyangProtocol::initialization_sequence(int32_t index, ModbusCommand& data, VFDSpindle* vfd) {
             // NOTE: data length is excluding the CRC16 checksum.
             data.tx_length = 6;
             data.rx_length = 6;

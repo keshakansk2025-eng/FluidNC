@@ -56,9 +56,9 @@ namespace Configuration {
         virtual void item(const char* name, Pin& value)       = 0;
         virtual void item(const char* name, IPAddress& value) = 0;
 
-        virtual void item(const char* name, int& value, const EnumItem* e) = 0;
+        virtual void item(const char* name, int32_t& value, const EnumItem* e) = 0;
 
-        virtual void item(const char* name, std::string& value, const int minLength = 0, const int maxLength = 255) = 0;
+        virtual void item(const char* name, std::string& value, const int32_t minLength = 0, const int32_t maxLength = 255) = 0;
 
         virtual HandlerType handlerType() = 0;
 
@@ -79,8 +79,8 @@ namespace Configuration {
         }
 
         template <typename T>
-        void sections(const char* name, int first_section, int limit_section, bool omit0, T* array) {
-            for (int i = first_section; i < limit_section; i++) {
+        void sections(const char* name, int32_t first_section, int32_t limit_section, bool omit0, T* array) {
+            for (int32_t i = first_section; i < limit_section; i++) {
                 std::string section_name(name);
                 if (i || !omit0) {
                     section_name += std::to_string(i);

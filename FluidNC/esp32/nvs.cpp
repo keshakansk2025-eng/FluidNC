@@ -26,10 +26,10 @@ bool NVS::get_str(const char* name, char* value, size_t* len) {
 bool NVS::set_str(const char* name, const char* value) {
     return nvs_set_str(handle(), name, value) || nvs_commit(handle());
 }
-bool NVS::get_i32(const char* name, int* value) {
+bool NVS::get_i32(const char* name, int32_t* value) {
     return nvs_get_i32(handle(), name, value) || nvs_commit(handle());
 }
-bool NVS::set_i32(const char* name, int value) {
+bool NVS::set_i32(const char* name, int32_t value) {
     return nvs_set_i32(handle(), name, value) || nvs_commit(handle());
 }
 bool NVS::get_i8(const char* key, int8_t* out_value) {

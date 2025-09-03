@@ -14,15 +14,15 @@ class TelnetClient;
 
 namespace WebUI {
     class TelnetServer : public Module {
-        static const int DEFAULT_TELNET_STATE      = 1;
-        static const int DEFAULT_TELNETSERVER_PORT = 23;
+        static const int32_t DEFAULT_TELNET_STATE      = 1;
+        static const int32_t DEFAULT_TELNETSERVER_PORT = 23;
 
-        static const int MAX_TELNET_PORT = 65001;
-        static const int MIN_TELNET_PORT = 1;
+        static const int32_t MAX_TELNET_PORT = 65001;
+        static const int32_t MIN_TELNET_PORT = 1;
 
-        static const int MAX_TLNT_CLIENTS = 2;
+        static const int32_t MAX_TLNT_CLIENTS = 2;
 
-        static const int FLUSHTIMEOUT = 500;
+        static const int32_t FLUSHTIMEOUT = 500;
 
     public:
         TelnetServer(const char* name) : Module(name) {}

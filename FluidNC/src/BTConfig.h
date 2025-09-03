@@ -24,13 +24,13 @@ namespace WebUI {
         BTChannel() : Channel("bluetooth", true) { _lineedit = new Lineedit(this, _line, Channel::maxLine - 1); }
         virtual ~BTChannel() = default;
 
-        int    available() override;
-        int    read() override;
-        int    peek() override;
-        void   flush() override { SerialBT.flush(); }
-        size_t write(uint8_t data) override;
+        int32_t available() override;
+        int32_t read() override;
+        int32_t peek() override;
+        void    flush() override { SerialBT.flush(); }
+        size_t  write(uint8_t data) override;
         // 512 is RX_QUEUE_SIZE which is defined in BluetoothSerial.cpp but not in its .h
-        int rx_buffer_available() override { return 512 - SerialBT.available(); }
+        int32_t rx_buffer_available() override { return 512 - SerialBT.available(); }
 
         bool realtimeOkay(char c) override;
         bool lineComplete(char* line, char c) override;
@@ -67,8 +67,8 @@ namespace WebUI {
     };
 
     class BTNameSetting : public StringSetting {
-        static const int MAX_BTNAME_LENGTH = 32;
-        static const int MIN_BTNAME_LENGTH = 1;
+        static const int32_t MAX_BTNAME_LENGTH = 32;
+        static const int32_t MIN_BTNAME_LENGTH = 1;
 
     public:
         BTNameSetting(const char* description, const char* grblName, const char* name, const char* defVal) :

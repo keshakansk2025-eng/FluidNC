@@ -4,21 +4,21 @@
 #include <src/PinMapper.h>
 
 #ifdef ESP32
-extern "C" void __pinMode(uint8_t pin, uint8_t mode);
-extern "C" int  __digitalRead(uint8_t pin);
-extern "C" void __digitalWrite(uint8_t pin, uint8_t val);
+extern "C" void    __pinMode(uint8_t pin, uint8_t mode);
+extern "C" int32_t __digitalRead(uint8_t pin);
+extern "C" void    __digitalWrite(uint8_t pin, uint8_t val);
 
 namespace {
     struct GPIONative {
         inline static void initialize() {
-            for (int i = 16; i <= 17; ++i) {
+            for (int32_t i = 16; i <= 17; ++i) {
                 __pinMode(i, OUTPUT);
                 __digitalWrite(i, LOW);
             }
         }
-        inline static void mode(int pin, uint8_t mode) { __pinMode(pin, mode); }
-        inline static void write(int pin, bool val) { __digitalWrite(pin, val ? HIGH : LOW); }
-        inline static bool read(int pin) { return __digitalRead(pin) != LOW; }
+        inline static void mode(int32_t pin, uint8_t mode) { __pinMode(pin, mode); }
+        inline static void write(int32_t pin, bool val) { __digitalWrite(pin, val ? HIGH : LOW); }
+        inline static bool read(int32_t pin) { return __digitalRead(pin) != LOW; }
     };
 }
 #else
@@ -27,7 +27,7 @@ namespace {
 namespace {
     struct GPIONative {
         // We test GPIO pin 16 and 17, and GPIO 16 is wired directly to 17:
-        static void WriteVirtualCircuitHystesis(SoftwarePin* pins, int pin, bool value) {
+        static void WriteVirtualCircuitHystesis(SoftwarePin* pins, int32_t pin, bool value) {
             switch (pin) {
                 case 16:
                 case 17:
@@ -38,9 +38,9 @@ namespace {
         }
 
         inline static void initialize() { SoftwareGPIO::instance().reset(WriteVirtualCircuitHystesis, false); }
-        inline static void mode(int pin, uint8_t mode) { SoftwareGPIO::instance().setMode(pin, mode); }
-        inline static void write(int pin, bool val) { SoftwareGPIO::instance().writeOutput(pin, val); }
-        inline static bool read(int pin) { return SoftwareGPIO::instance().read(pin); }
+        inline static void mode(int32_t pin, uint8_t mode) { SoftwareGPIO::instance().setMode(pin, mode); }
+        inline static void write(int32_t pin, bool val) { SoftwareGPIO::instance().writeOutput(pin, val); }
+        inline static bool read(int32_t pin) { return SoftwareGPIO::instance().read(pin); }
     };
 }
 void digitalWrite(uint8_t pin, uint8_t val);
@@ -108,7 +108,7 @@ namespace Pins {
         Assert(false == GPIONative::read(17));
     }
 
-    void TestISR(int deltaRising, int deltaFalling, int mode) {
+    void TestISR(int32_t deltaRising, int32_t deltaFalling, int32_t mode) {
         GPIONative::initialize();
 
         Pin gpio16 = Pin::create("gpio.16");
@@ -128,7 +128,7 @@ namespace Pins {
         // because it bounces all over the place... TODO FIXME, some mechanism
         // to cope with that.
 
-        for (int i = 0; i < 10; ++i) {
+        for (int32_t i = 0; i < 10; ++i) {
             if (deltaRising) {
                 auto oldCount = hitCount;
                 gpio17.on();
@@ -285,11 +285,11 @@ namespace Pins {
     }
 
     class GPIOISR {
-        int  hitCount = 0;
-        void HandleISR() { ++hitCount; }
+        int32_t hitCount = 0;
+        void    HandleISR() { ++hitCount; }
 
     public:
-        GPIOISR(int deltaRising, int deltaFalling, int mode) {
+        GPIOISR(int32_t deltaRising, int32_t deltaFalling, int32_t mode) {
             GPIONative::initialize();
 
             Pin gpio16 = Pin::create("gpio.16");
@@ -298,8 +298,8 @@ namespace Pins {
             gpio16.setAttr(Pin::Attr::Input | Pin::Attr::ISR);
             gpio17.setAttr(Pin::Attr::Output);
 
-            hitCount     = 0;
-            int expected = 0;
+            hitCount         = 0;
+            int32_t expected = 0;
             // gpio16.attachInterrupt<GPIOISR, &GPIOISR::HandleISR>(this, mode);
 
             // Two ways to set I/O:
@@ -313,7 +313,7 @@ namespace Pins {
             // because it bounces all over the place... TODO FIXME, some mechanism
             // to cope with that.
 
-            for (int i = 0; i < 10; ++i) {
+            for (int32_t i = 0; i < 10; ++i) {
                 if (deltaRising) {
                     auto oldCount = hitCount;
                     gpio17.on();

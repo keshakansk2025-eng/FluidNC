@@ -177,8 +177,8 @@ enum class WaitOnInputMode : int8_t {
     Low,
 };
 
-static const int MaxUserDigitalPin = 8;
-static const int MaxUserAnalogPin  = 4;
+static const int32_t MaxUserDigitalPin = 8;
+static const int32_t MaxUserAnalogPin  = 4;
 
 // Modal Group G8: Tool length offset
 enum class ToolLengthOffset : gcodenum_t {

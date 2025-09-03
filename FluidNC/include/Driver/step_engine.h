@@ -22,10 +22,10 @@ typedef struct step_engine {
     // Setup the step pin, returning a number to identify it.
     // In many cases, the return value is the same as pin, but some step
     // engines might allocate a surrogate object and return its ID
-    int (*init_step_pin)(int pin, int inverted);
+    int32_t (*init_step_pin)(int32_t pin, int32_t inverted);
 
     // Set the state of the direction pin to level
-    void (*set_dir_pin)(int pin, int level);
+    void (*set_dir_pin)(int32_t pin, int32_t level);
 
     // Commit all of the direction pin changes and wait for dir_delay_us
     // if necessary
@@ -35,7 +35,7 @@ typedef struct step_engine {
     void (*start_step)();
 
     // Set the state of the step pin to level
-    void (*set_step_pin)(int pin, int level);
+    void (*set_step_pin)(int32_t pin, int32_t level);
 
     // Commit all of the direction pin changes and either wait for pulse_delay_us
     // or arrange for start_unstep to do it
@@ -44,7 +44,7 @@ typedef struct step_engine {
     // Wait for pulse_delay_us if necessary
     // If the return value is true, Stepping.cpp will skip the rest of the
     // the unstep process
-    int (*start_unstep)();
+    int32_t (*start_unstep)();
 
     // Commit all changes (deassertions) of step pins
     void (*finish_unstep)();

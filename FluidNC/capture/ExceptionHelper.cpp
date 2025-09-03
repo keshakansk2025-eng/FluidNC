@@ -34,7 +34,7 @@ struct module_data {
 class symbol {
     typedef IMAGEHLP_SYMBOL64 sym_type;
     sym_type*                 sym;
-    static const int          max_name_len = 1024;
+    static const int32_t      max_name_len = 1024;
 
 public:
     symbol(HANDLE process, DWORD64 address) : sym((sym_type*)::operator new(sizeof(*sym) + max_name_len)) {
@@ -59,8 +59,8 @@ public:
 };
 
 class get_mod_info {
-    HANDLE           process;
-    static const int buffer_length = 32768;
+    HANDLE               process;
+    static const int32_t buffer_length = 32768;
 
 public:
     get_mod_info(HANDLE h) : process(h) {}
@@ -76,12 +76,12 @@ public:
         ret.load_size    = mi.SizeOfImage;
 
         GetModuleFileNameExW(process, module, temp, sizeof(temp) / sizeof(WCHAR));
-        for (int i = 0; i < buffer_length; ++i) {
+        for (int32_t i = 0; i < buffer_length; ++i) {
             temp2[i] = char(temp[i]);
         }
         ret.image_name = temp2;
         GetModuleBaseNameW(process, module, temp, sizeof(temp));
-        for (int i = 0; i < buffer_length; ++i) {
+        for (int32_t i = 0; i < buffer_length; ++i) {
             temp2[i] = char(temp[i]);
         }
         ret.module_name = temp2;
@@ -95,7 +95,7 @@ public:
 void DumpStackTrace(std::ostringstream& builder) {
     HANDLE                   process            = GetCurrentProcess();
     HANDLE                   hThread            = GetCurrentThread();
-    int                      frame_number       = 0;
+    int32_t                  frame_number       = 0;
     DWORD                    offset_from_symbol = 0;
     IMAGEHLP_LINE64          line               = { 0 };
     std::vector<module_data> modules;
@@ -142,13 +142,13 @@ void DumpStackTrace(std::ostringstream& builder) {
     line.SizeOfStruct            = sizeof line;
     IMAGE_NT_HEADERS* h          = ImageNtHeader(base);
     DWORD             image_type = h->FileHeader.Machine;
-    int               n          = 0;
+    int32_t           n          = 0;
 
     builder << "Stack trace: ";
 
     // Build the string:
     bool foundCreateException = false;
-    for (int n = 0; n < 10 && frame.AddrPC.Offset != 0; ++n) {
+    for (int32_t n = 0; n < 10 && frame.AddrPC.Offset != 0; ++n) {
         if (frame.AddrPC.Offset != 0) {
             std::string fnName = symbol(process, frame.AddrPC.Offset).undecorated_name();
 

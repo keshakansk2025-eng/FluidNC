@@ -47,7 +47,7 @@ namespace fs {
         return _p->write(buf, size);
     }
 
-    int File::available() {
+    int32_t File::available() {
         if (!*this) {
             return false;
         }
@@ -55,7 +55,7 @@ namespace fs {
         return _p->size() - _p->position();
     }
 
-    int File::read() {
+    int32_t File::read() {
         if (!*this) {
             return -1;
         }
@@ -76,13 +76,13 @@ namespace fs {
         return _p->read(buf, size);
     }
 
-    int File::peek() {
+    int32_t File::peek() {
         if (!*this) {
             return -1;
         }
 
         size_t curPos = _p->position();
-        int    result = read();
+        int32_t    result = read();
         seek(curPos, SeekSet);
         return result;
     }

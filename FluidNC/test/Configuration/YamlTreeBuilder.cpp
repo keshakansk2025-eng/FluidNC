@@ -25,7 +25,7 @@ namespace Configuration {
     class TestBasic2 : public Configurable {
     public:
         String aap;
-        int    banaan;
+        int32_t    banaan;
 
         void validate() const {}
         void group(HandlerBase& handler) {
@@ -47,9 +47,9 @@ namespace Configuration {
 
     class TestBasicEnum : public Configurable {
     public:
-        int aap;
-        int value;
-        int banaan;
+        int32_t aap;
+        int32_t value;
+        int32_t banaan;
 
         void validate() const {}
         void group(HandlerBase& handler) override {
@@ -63,7 +63,7 @@ namespace Configuration {
     public:
         TestBasic*  n1  = nullptr;
         TestBasic2* n2  = nullptr;
-        int         foo = 0;
+        int32_t         foo = 0;
 
         void validate() const {}
         void group(HandlerBase& handler) override {

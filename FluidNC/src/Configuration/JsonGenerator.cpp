@@ -14,7 +14,7 @@
 
 namespace Configuration {
     JsonGenerator::JsonGenerator(JSONencoder& encoder) : _encoder(encoder) {
-        std::atomic_thread_fence(std::memory_order::memory_order_seq_cst);
+        std::atomic_thread_fence(std::memory_order::seq_cst);
     }
 
     void JsonGenerator::enter(const char* name) {
@@ -48,7 +48,7 @@ namespace Configuration {
         _encoder.begin_array("O");
         {
             _encoder.begin_object();
-            _encoder.member("False", 0);
+            _encoder.member("False", int32_t(0));
             _encoder.end_object();
             _encoder.begin_object();
             _encoder.member("True", 1);
@@ -59,7 +59,7 @@ namespace Configuration {
         leave();
     }
 
-    void JsonGenerator::item(const char* name, int& value, const int32_t minValue, const int32_t maxValue) {
+    void JsonGenerator::item(const char* name, int32_t& value, const int32_t minValue, const int32_t maxValue) {
         enter(name);
         char buf[32];
         itoa(value, buf, 10);
@@ -103,7 +103,7 @@ namespace Configuration {
         leave();
     }
 
-    void JsonGenerator::item(const char* name, std::string& value, const int minLength, const int maxLength) {
+    void JsonGenerator::item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) {
         enter(name);
         _encoder.begin_webui(_currentPath, "S", value.c_str(), minLength, maxLength);
         _encoder.end_object();
@@ -147,9 +147,9 @@ namespace Configuration {
         leave();
     }
 
-    void JsonGenerator::item(const char* name, int& value, const EnumItem* e) {
+    void JsonGenerator::item(const char* name, int32_t& value, const EnumItem* e) {
         enter(name);
-        int selected_val = 0;
+        int32_t selected_val = 0;
         //const char* str          = "unknown";
         for (auto e2 = e; e2->name; ++e2) {
             if (value == e2->value) {

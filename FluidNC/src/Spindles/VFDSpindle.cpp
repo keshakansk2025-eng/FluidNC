@@ -32,7 +32,7 @@
 
 namespace Spindles {
     // number of commands that can be queued up.
-    const int VFD_RS485_QUEUE_SIZE = 10;
+    const int32_t VFD_RS485_QUEUE_SIZE = 10;
 
     // ================== Class methods ==================================
 
@@ -136,9 +136,9 @@ namespace Spindles {
             auto minSpeedAllowed = dev_speed > _slop ? (dev_speed - _slop) : 0;
             auto maxSpeedAllowed = dev_speed + _slop;
 
-            int       unchanged = 0;
-            const int limit     = 20;  // 20 * 0.5s = 10 sec
-            auto      last      = _sync_dev_speed;
+            int32_t       unchanged = 0;
+            const int32_t limit     = 20;  // 20 * 0.5s = 10 sec
+            auto          last      = _sync_dev_speed;
 
             while ((_last_override_value == sys.spindle_speed_ovr()) &&  // skip if the override changes
                    ((_sync_dev_speed < minSpeedAllowed || _sync_dev_speed > maxSpeedAllowed) && unchanged < limit)) {

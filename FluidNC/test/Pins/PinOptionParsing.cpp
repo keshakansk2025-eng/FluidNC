@@ -28,7 +28,7 @@ namespace Pins {
     Test(PinOptionParsing, SingleArg) {
         const char* input = "first";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -43,7 +43,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");
@@ -57,7 +57,7 @@ namespace Pins {
     Test(PinOptionParsing, SingleArgWithWS) {
         const char* input = "  first";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -72,7 +72,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");
@@ -86,7 +86,7 @@ namespace Pins {
     Test(PinOptionParsing, SingleArgWithWS2) {
         const char* input = "  first  ";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -101,7 +101,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");
@@ -115,7 +115,7 @@ namespace Pins {
     Test(PinOptionParsing, TwoArg1) {
         const char* input = "first;second";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -134,7 +134,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");
@@ -150,7 +150,7 @@ namespace Pins {
     Test(PinOptionParsing, TwoArg2) {
         const char* input = "first:second";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -169,7 +169,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");
@@ -185,7 +185,7 @@ namespace Pins {
     Test(PinOptionParsing, TwoArgWithValues) {
         const char* input = "first=12;second=13";
         char        tmp[20];
-        int         n = snprintf(tmp, 20, "%s", input);
+        int32_t         n = snprintf(tmp, 20, "%s", input);
 
         Pins::PinOptionsParser parser(tmp, tmp + n);
 
@@ -210,7 +210,7 @@ namespace Pins {
         }
 
         // Typical use is a for loop. Let's test the two ways to use it:
-        int ctr = 0;
+        int32_t ctr = 0;
         for (auto it : parser) {
             if (ctr == 0) {
                 Assert(it.is("first"), "Expected 'first'");

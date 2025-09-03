@@ -20,9 +20,9 @@ step_engine_t* find_engine(const char* name) {
 namespace Machine {
 
     // fStepperTimer should be an integer divisor of the bus speed, i.e. of fTimers
-    const int ticksPerMicrosecond = Stepping::fStepperTimer / 1000000;
+    const int32_t ticksPerMicrosecond = Stepping::fStepperTimer / 1000000;
 
-    int Stepping::_engine = RMT_ENGINE;
+    int32_t Stepping::_engine = RMT_ENGINE;
 
     AxisMask Stepping::direction_mask = 0;
 
@@ -73,7 +73,7 @@ namespace Machine {
 
 Stepping::motor_t* Stepping::axis_motors[MAX_N_AXIS][MAX_MOTORS_PER_AXIS] = { nullptr };
 
-void Stepping::assignMotor(int axis, int motor, int step_pin, bool step_invert, int dir_pin, bool dir_invert) {
+void Stepping::assignMotor(int32_t axis, int32_t motor, int32_t step_pin, bool step_invert, int32_t dir_pin, bool dir_invert) {
     step_pin = step_engine->init_step_pin(step_pin, step_invert);
 
     motor_t* m               = new motor_t;
@@ -90,34 +90,34 @@ void Stepping::assignMotor(int axis, int motor, int step_pin, bool step_invert, 
     }
 }
 
-int Stepping::axis_steps[MAX_N_AXIS] = { 0 };
+int32_t Stepping::axis_steps[MAX_N_AXIS] = { 0 };
 
-bool* Stepping::limit_var(int axis, int motor) {
+bool* Stepping::limit_var(int32_t axis, int32_t motor) {
     auto m = axis_motors[axis][motor];
     return m ? &(m->limited) : nullptr;
 }
 
-void Stepping::block(int axis, int motor) {
+void Stepping::block(int32_t axis, int32_t motor) {
     auto m = axis_motors[axis][motor];
     if (m) {
         m->blocked = true;
     }
 }
 
-void Stepping::unblock(int axis, int motor) {
+void Stepping::unblock(int32_t axis, int32_t motor) {
     auto m = axis_motors[axis][motor];
     if (m) {
         m->blocked = false;
     }
 }
 
-void Stepping::limit(int axis, int motor) {
+void Stepping::limit(int32_t axis, int32_t motor) {
     auto m = axis_motors[axis][motor];
     if (m) {
         m->limited = true;
     }
 }
-void Stepping::unlimit(int axis, int motor) {
+void Stepping::unlimit(int32_t axis, int32_t motor) {
     auto m = axis_motors[axis][motor];
     if (m) {
         m->limited = false;

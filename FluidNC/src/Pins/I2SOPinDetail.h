@@ -12,7 +12,7 @@ namespace Pins {
         PinCapabilities _capabilities;
         PinAttributes   _attributes;
 
-        static const int         nI2SOPins = 32;
+        static const int32_t         nI2SOPins = 32;
         static std::vector<bool> _claimed;
 
         bool _lastWrittenValue = false;
@@ -23,9 +23,9 @@ namespace Pins {
         PinCapabilities capabilities() const override;
 
         // I/O:
-        void          write(int high) override;
-        void          synchronousWrite(int high) override;
-        int           read() override;
+        void          write(int32_t high) override;
+        void          synchronousWrite(int32_t high) override;
+        int32_t           read() override;
         void          setAttr(PinAttributes value, uint32_t frequency) override;
         PinAttributes getAttr() const override;
 

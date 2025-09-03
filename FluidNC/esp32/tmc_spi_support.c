@@ -14,6 +14,10 @@
 #    define SPI2 GPSPI2
 #endif
 
+#ifndef SPI_LL_PERIPH_CLK_FREQ
+#    define SPI_LL_PERIPH_CLK_FREQ (80 * 1000000)
+#endif
+
 spi_dev_t* hw = &SPI2;
 
 static spi_ll_clock_val_t clk_reg_val = 0;
@@ -46,7 +50,7 @@ void tmc_spi_bus_setup() {
 
 // Perform a full-duplex transfer from out/out_bitlen to in/in_bitlen
 // If in_bitlen is 0, the input data will be ignored
-void tmc_spi_transfer_data(const uint8_t* out, int out_bitlen, uint8_t* in, int in_bitlen) {
+void tmc_spi_transfer_data(const uint8_t* out, int32_t out_bitlen, uint8_t* in, int32_t in_bitlen) {
     spi_ll_set_mosi_bitlen(hw, out_bitlen);
 
     spi_ll_set_miso_bitlen(hw, in_bitlen);
@@ -61,7 +65,7 @@ void tmc_spi_transfer_data(const uint8_t* out, int out_bitlen, uint8_t* in, int 
     }
 
     spi_ll_clear_int_stat(hw);
-    spi_ll_master_user_start(hw);
+    spi_ll_user_start(hw);
     while (!spi_ll_usr_is_done(hw)) {}
 
     spi_ll_read_buffer(hw, in, in_bitlen);  // No-op if in_bitlen is 0
@@ -73,8 +77,8 @@ void tmc_spi_transfer_data(const uint8_t* out, int out_bitlen, uint8_t* in, int 
 // access that latches the register data into the output register.
 
 // cppcheck-suppress unusedFunction
-void tmc_spi_rw_reg(uint8_t cmd, uint32_t data, int index) {
-    int before = index > 0 ? index - 1 : 0;
+void tmc_spi_rw_reg(uint8_t cmd, uint32_t data, int32_t index) {
+    int32_t before = index > 0 ? index - 1 : 0;
 
     const size_t packetLen   = 5;
     size_t       total_bytes = (before + 1) * packetLen;

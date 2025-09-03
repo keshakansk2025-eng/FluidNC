@@ -16,11 +16,11 @@ public:
     size_t write(uint8_t c) override;
 
     // Stream methods (Channel inherits from Stream)
-    int available(void) override;
-    int read() override;
+    int32_t available(void) override;
+    int32_t read() override;
 
     // Channel methods
-    int  rx_buffer_available() override;
-    bool realtimeOkay(char c) override;
-    bool lineComplete(char* line, char c) override;
+    int32_t rx_buffer_available() override;
+    bool    realtimeOkay(char c) override;
+    bool    lineComplete(char* line, char c) override;
 };

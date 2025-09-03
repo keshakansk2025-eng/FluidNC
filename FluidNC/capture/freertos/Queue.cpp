@@ -63,7 +63,7 @@ BaseType_t xQueueGenericSend(QueueHandle_t xQueue, const void* const pvItemToQue
 }
 
 UBaseType_t uxQueueMessagesWaiting(const QueueHandle_t xQueue) {
-    int n = xQueue->writeIndex - xQueue->readIndex;
+    int32_t n = xQueue->writeIndex - xQueue->readIndex;
     if (n < 0) {
         n += xQueue->numberItems;
     }

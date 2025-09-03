@@ -60,7 +60,7 @@ namespace Machine {
     }
 
     void Axis::config_motors() {
-        for (int motor = 0; motor < Axis::MAX_MOTORS_PER_AXIS; ++motor) {
+        for (int32_t motor = 0; motor < Axis::MAX_MOTORS_PER_AXIS; ++motor) {
             auto mot = _motors[motor];
             if (mot)
                 mot->config_motor();
@@ -84,8 +84,8 @@ namespace Machine {
     }
 
     // How many motors have switches defined?
-    int Axis::motorsWithSwitches() {
-        int count = 0;
+    int32_t Axis::motorsWithSwitches() {
+        int32_t count = 0;
         for (size_t i = 0; i < MAX_MOTORS_PER_AXIS; i++) {
             auto m = _motors[i];
             if (m && m->hasSwitches()) {

@@ -17,8 +17,8 @@ namespace Pins {
         PinCapabilities capabilities() const override;
 
         // I/O will all give an error:
-        void          write(int high) override;
-        int           read() override;
+        void          write(int32_t high) override;
+        int32_t           read() override;
         void          setAttr(PinAttributes value, uint32_t frequency) override;
         PinAttributes getAttr() const override;
 

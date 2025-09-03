@@ -2,7 +2,7 @@
 
 using namespace Machine;
 
-SSD1306_I2C::SSD1306_I2C(uint8_t address, OLEDDISPLAY_GEOMETRY g, I2CBus* i2c, int frequency) :
+SSD1306_I2C::SSD1306_I2C(uint8_t address, OLEDDISPLAY_GEOMETRY g, I2CBus* i2c, int32_t frequency) :
     _address(address), _i2c(i2c), _frequency(frequency), _error(false) {
     setGeometry(g);
 }
@@ -20,7 +20,7 @@ void SSD1306_I2C::display(void) {
     if (_error) {
         return;
     }
-    const int x_offset = (128 - this->width()) / 2;
+    const int32_t x_offset = (128 - this->width()) / 2;
 #ifdef OLEDDISPLAY_DOUBLE_BUFFER
     uint8_t minBoundY = UINT8_MAX;
     uint8_t maxBoundY = 0;

@@ -99,8 +99,8 @@ static Error fileShowSome(const char* parameter, AuthenticationLevel auth_level,
 
     std::string_view args(parameter);
 
-    int firstline = 0;
-    int lastline  = 0;
+    int32_t firstline = 0;
+    int32_t lastline  = 0;
 
     std::string_view line_range;
     // Syntax: firstline:lastline,filename  or lastline,filename
@@ -145,7 +145,7 @@ static Error fileShowSome(const char* parameter, AuthenticationLevel auth_level,
     } else {
         char  fileLine[255];
         Error res;
-        for (int linenum = 0; linenum < lastline && (res = theFile->readLine(fileLine, 255)) == Error::Ok; ++linenum) {
+        for (int32_t linenum = 0; linenum < lastline && (res = theFile->readLine(fileLine, 255)) == Error::Ok; ++linenum) {
             if (linenum >= firstline) {
                 j.string(fileLine);
             }
@@ -222,9 +222,9 @@ static Error fileSendJson(const char* parameter, AuthenticationLevel auth_level,
     } else {
         j.begin_member("result");
 
-        char  fileLine[101];
-        Error res;
-        int   len;
+        char    fileLine[101];
+        Error   res;
+        int32_t len;
 
         while ((len = theFile->read(fileLine, 100)) > 0) {
             fileLine[len] = '\0';
@@ -350,7 +350,7 @@ static Error listFilesystemJSON(const char* fs, const char* value, Authenticatio
         j.begin_array("files");
         for (auto const& dir_entry : iter) {
             j.begin_object();
-            j.member("name", dir_entry.path().filename().u8string());
+            j.member("name", reinterpret_cast<const char*>(dir_entry.path().filename().u8string().c_str()));
             j.member("size", dir_entry.is_directory() ? -1 : dir_entry.file_size());
             j.end_object();
         }
@@ -407,9 +407,11 @@ static Error listGCodeFiles(const char* parameter, AuthenticationLevel auth_leve
             for (auto const& dir_entry : iter) {
                 auto fn     = dir_entry.path().filename();
                 auto is_dir = dir_entry.is_directory();
-                if (out.is_visible(fn.stem().u8string(), fn.extension().u8string(), is_dir)) {
+                if (out.is_visible(reinterpret_cast<const char*>(fn.stem().u8string().c_str()),
+                                   reinterpret_cast<const char*>(fn.extension().u8string().c_str()),
+                                   is_dir)) {
                     j.begin_object();
-                    j.member("name", dir_entry.path().filename().u8string());
+                    j.member("name", reinterpret_cast<const char*>(dir_entry.path().filename().u8string().c_str()));
                     j.member("size", is_dir ? -1 : dir_entry.file_size());
                     j.end_object();
                 }
@@ -528,10 +530,10 @@ static Error copyDir(const char* iDir, const char* oDir, Channel& out) {  // No 
         } else {
             std::string opath(oDir);
             opath += "/";
-            opath += dir_entry.path().filename().u8string();
+            opath += reinterpret_cast<const char*>(dir_entry.path().filename().u8string().c_str());
             std::string ipath(iDir);
             ipath += "/";
-            ipath += dir_entry.path().filename().u8string();
+            ipath += reinterpret_cast<const char*>(dir_entry.path().filename().u8string().c_str());
             log_info_to(out, ipath << " -> " << opath);
             auto err1 = copyFile(ipath.c_str(), opath.c_str(), out);
             if (err1 != Error::Ok) {
@@ -601,7 +603,7 @@ static Error xmodem_receive(const char* value, AuthenticationLevel auth_level, C
     pollingPaused = true;
     bool oldCr    = out.setCr(false);
     delay_ms(1000);
-    int size = xmodemReceive(&out, outfile);
+    int32_t size = xmodemReceive(&out, outfile);
     out.setCr(oldCr);
     pollingPaused = false;
     if (size >= 0) {
@@ -630,7 +632,7 @@ static Error xmodem_send(const char* value, AuthenticationLevel auth_level, Chan
     }
     bool oldCr = out.setCr(false);
     log_info("Sending " << value << " via XModem");
-    int size = xmodemTransmit(&out, infile);
+    int32_t size = xmodemTransmit(&out, infile);
     out.setCr(oldCr);
     delete infile;
     if (size >= 0) {

@@ -93,7 +93,7 @@ namespace Extenders {
                                 SUPPORT_TASK_CORE  // core
         );
 
-        for (int i = 0; i < 4; ++i) {
+        for (int32_t i = 0; i < 4; ++i) {
             auto& data = _isrData[i];
 
             data._address   = uint8_t(_baseAddress + i);
@@ -128,10 +128,10 @@ namespace Extenders {
         uint16_t value    = (uint16_t(r2) << 8) | uint16_t(r1);
         *_valueBase       = value;
 
-        // log_info("New I2C pin extender state: "; for (int i = 0; i < 16; ++i) { ss << (((value & (1 << i)) != 0) ? "x" : " "); });
+        // log_info("New I2C pin extender state: "; for (int32_t i = 0; i < 16; ++i) { ss << (((value & (1 << i)) != 0) ? "x" : " "); });
 
         if (_hasISR) {
-            for (int i = 0; i < 16; ++i) {
+            for (int32_t i = 0; i < 16; ++i) {
                 uint16_t mask = uint16_t(1) << i;
 
                 if (_isrCallback[i] != nullptr && (oldValue & mask) != (value & mask)) {
@@ -223,7 +223,7 @@ namespace Extenders {
 
     void I2CPinExtenderBase::flushWrites() {
         uint64_t write = _value ^ _invert;
-        for (int i = 0; i < 8; ++i) {
+        for (int32_t i = 0; i < 8; ++i) {
             if ((_dirtyRegisters & (1 << i)) != 0) {
                 const uint8_t OutputReg = 2;
                 uint8_t       address   = _baseAddress + (i / 2);
@@ -238,9 +238,9 @@ namespace Extenders {
     }
 
     // ISR's:
-    void I2CPinExtenderBase::attachInterrupt(pinnum_t index, void (*callback)(void*, bool), void* arg, int mode) {
-        int device    = index / 16;
-        int pinNumber = index % 16;
+    void I2CPinExtenderBase::attachInterrupt(pinnum_t index, void (*callback)(void*, bool), void* arg, int32_t mode) {
+        int32_t device    = index / 16;
+        int32_t pinNumber = index % 16;
 
         Assert(_isrData[device]._isrCallback[pinNumber] == nullptr, "You can only set a single ISR for pin %d", index);
 
@@ -251,22 +251,22 @@ namespace Extenders {
     }
 
     void I2CPinExtenderBase::detachInterrupt(pinnum_t index) {
-        int device    = index / 16;
-        int pinNumber = index % 16;
+        int32_t device    = index / 16;
+        int32_t pinNumber = index % 16;
 
         _isrData[device]._isrCallback[pinNumber] = nullptr;
         _isrData[device]._isrArgument[pinNumber] = nullptr;
         _isrData[device]._isrMode[pinNumber]     = 0;
 
         bool hasISR = false;
-        for (int i = 0; i < 16; ++i) {
+        for (int32_t i = 0; i < 16; ++i) {
             hasISR |= (_isrData[device]._isrArgument[i] != nullptr);
         }
         _isrData[device]._hasISR = hasISR;
     }
 
     I2CPinExtenderBase::~I2CPinExtenderBase() {
-        for (int i = 0; i < 4; ++i) {
+        for (int32_t i = 0; i < 4; ++i) {
             auto& data = _isrData[i];
 
             if (!data._pin.undefined()) {

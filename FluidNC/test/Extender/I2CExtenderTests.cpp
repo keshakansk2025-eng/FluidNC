@@ -15,7 +15,7 @@
 namespace {
     struct GPIONative {
         // We wire 15 to 20.
-        static void WriteVirtualCircuitHystesis(SoftwarePin* pins, int pin, bool value) {
+        static void WriteVirtualCircuitHystesis(SoftwarePin* pins, int32_t pin, bool value) {
             // switch (pin) {
             //     case 20:
             //         pins[15].handlePadChange(value);
@@ -24,9 +24,9 @@ namespace {
         }
 
         inline static void initialize() { SoftwareGPIO::instance().reset(WriteVirtualCircuitHystesis, true); }
-        inline static void mode(int pin, uint8_t mode) { SoftwareGPIO::instance().setMode(pin, mode); }
-        inline static void write(int pin, bool val) { SoftwareGPIO::instance().writeOutput(pin, val); }
-        inline static bool read(int pin) { return SoftwareGPIO::instance().read(pin); }
+        inline static void mode(int32_t pin, uint8_t mode) { SoftwareGPIO::instance().setMode(pin, mode); }
+        inline static void write(int32_t pin, bool val) { SoftwareGPIO::instance().writeOutput(pin, val); }
+        inline static bool read(int32_t pin) { return SoftwareGPIO::instance().read(pin); }
     };
 
     class PCA9539Emulator {
@@ -39,9 +39,9 @@ namespace {
         uint8_t accessedRegisters = 0;
         uint8_t previousRegisters = 0;  // For debugging purposes.
 
-        int isrPin_;
+        int32_t isrPin_;
 
-        void setRegister(int reg, uint8_t value) {
+        void setRegister(int32_t reg, uint8_t value) {
             accessedRegisters |= uint8_t(1 << reg);
             switch (reg) {
                 // input
@@ -103,8 +103,8 @@ namespace {
         }
 
     public:
-        PCA9539Emulator(int isrPin) : isrPin_(isrPin) {
-            for (int i = 0; i < 2; ++i) {
+        PCA9539Emulator(int32_t isrPin) : isrPin_(isrPin) {
+            for (int32_t i = 0; i < 2; ++i) {
                 reg_config[i] = 0;
                 reg_invert[i] = 0;
                 reg_input[i]  = 0;
@@ -121,9 +121,9 @@ namespace {
             static_cast<PCA9539Emulator*>(userData)->handler(theWire, data);
         }
 
-        void setPadValue(int pinId, bool v) {
+        void setPadValue(int32_t pinId, bool v) {
             uint8_t mask = uint8_t(1 << (pinId % 8));
-            int     idx  = pinId / 8;
+            int32_t     idx  = pinId / 8;
 
             if (reg_config[idx] & mask)  // input
             {
@@ -142,9 +142,9 @@ namespace {
             }
         }
 
-        bool getPadValue(int pinId) {
+        bool getPadValue(int32_t pinId) {
             uint8_t mask = uint8_t(1 << (pinId % 8));
-            int     idx  = pinId / 8;
+            int32_t     idx  = pinId / 8;
 
             if ((reg_config[idx] & mask) == 0) {
                 // This is an output pin, so combine registers:
@@ -170,7 +170,7 @@ namespace {
         Roundtrip() { before = Capture::instance().current(); }
 
         ~Roundtrip() {
-            for (int i = 0; i < 3; ++i) {
+            for (int32_t i = 0; i < 3; ++i) {
                 while (Capture::instance().current() < before + 1) {
                     delay(10);
                 }
@@ -244,7 +244,7 @@ namespace Configuration {
             }
         }
 
-        void item(const char* name, String& value, int minLength = 0, int maxLength = 255) override {}
+        void item(const char* name, String& value, int32_t minLength = 0, int32_t maxLength = 255) override {}
 
         HandlerType handlerType() override { return HandlerType::Parser; }
 

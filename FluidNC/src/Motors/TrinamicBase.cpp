@@ -31,7 +31,7 @@ namespace MotorDrivers {
     // tstep = fclk / (time between 1/256 steps)
     // This is used to set the stallguard window from the homing speed.
     // The percent is the offset on the window
-    uint32_t TrinamicBase::calc_tstep(int percent) {
+    uint32_t TrinamicBase::calc_tstep(int32_t percent) {
         auto axisConfig     = Axes::_axis[axis_index()];
         auto homing         = axisConfig->_homing;
         auto homingFeedrate = homing ? homing->_feedRate : 200.0;

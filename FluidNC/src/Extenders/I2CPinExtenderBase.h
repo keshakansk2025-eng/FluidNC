@@ -57,11 +57,11 @@ namespace Extenders {
     class I2CPinExtenderBase : public PinExtenderDriver {
         // Address can be set for up to 4 devices. Each device supports 16 pins.
 
-        static const int numberPins = 16 * 4;
-        uint64_t         _claimed   = 0;
+        static const int32_t numberPins = 16 * 4;
+        uint64_t             _claimed   = 0;
 
         Machine::I2CBus* _i2cBus;
-        int              _i2cBusId = 0;
+        int32_t          _i2cBusId = 0;
 
         static uint8_t IRAM_ATTR I2CGetValue(Machine::I2CBus* bus, uint8_t address, uint8_t reg);
         static void IRAM_ATTR    I2CSetValue(Machine::I2CBus* bus, uint8_t address, uint8_t reg, uint8_t value);
@@ -93,7 +93,7 @@ namespace Extenders {
             bool        _hasISR          = false;
             ISRCallback _isrCallback[16] = { 0 };
             void*       _isrArgument[16] = { 0 };
-            int         _isrMode[16]     = { 0 };
+            int32_t     _isrMode[16]     = { 0 };
 
             void IRAM_ATTR updateValueFromDevice();
         };
@@ -123,7 +123,7 @@ namespace Extenders {
         bool IRAM_ATTR readPin(pinnum_t index) override;
         void IRAM_ATTR flushWrites() override;
 
-        void attachInterrupt(pinnum_t index, void (*callback)(void*, bool), void* arg, int mode) override;
+        void attachInterrupt(pinnum_t index, void (*callback)(void*, bool), void* arg, int32_t mode) override;
         void detachInterrupt(pinnum_t index) override;
 
         ~I2CPinExtenderBase();

@@ -18,19 +18,19 @@ const char* canonicalPath(const char* filename, const char* defaultFs) {
     return filename;
 }
 
-bool sd_init_slot(uint32_t freq_hz, int cs_pin, int cd_pin = -1, int wp_pin = -1) {
+bool sd_init_slot(uint32_t freq_hz, int32_t cs_pin, int32_t cd_pin = -1, int32_t wp_pin = -1) {
     return true;
 }
 void sd_deinit_slot() {}
 void sd_unmount() {}
 
-std::error_code sd_mount(int max_files) {
+std::error_code sd_mount(int32_t max_files) {
     return {};
 };
 
 #include "Driver/delay_usecs.h"
-static int counter = 0;
-uint32_t   ticks_per_us;
+static int32_t counter = 0;
+uint32_t       ticks_per_us;
 
 void timing_init() {
     ticks_per_us = 1;

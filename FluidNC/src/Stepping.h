@@ -15,19 +15,19 @@ namespace Machine {
     private:
         static bool    _switchedStepper;
         static int32_t _stepPulseEndTime;
-        static int     _i2sPulseCounts;
+        static int32_t     _i2sPulseCounts;
 
-        static const int MAX_MOTORS_PER_AXIS = 2;
+        static const int32_t MAX_MOTORS_PER_AXIS = 2;
         struct motor_t {
-            int  step_pin;
-            int  dir_pin;
+            int32_t  step_pin;
+            int32_t  dir_pin;
             bool step_invert;
             bool dir_invert;
             bool blocked;
             bool limited;
         };
         static motor_t* axis_motors[MAX_N_AXIS][MAX_MOTORS_PER_AXIS];
-        static int      _n_active_axes;
+        static int32_t      _n_active_axes;
 
         static void    startPulseTimer();
         static void    waitDirection();  // Wait for direction delay
@@ -59,15 +59,15 @@ namespace Machine {
         static uint32_t _directionDelayUsecs;
         static uint32_t _disableDelayUsecs;
 
-        static int _engine;
+        static int32_t _engine;
 
         // Interfaces to stepping engine
         static void init();
 
-        static uint32_t getSteps(int axis) { return axis_steps[axis]; }
-        static void     setSteps(int axis, uint32_t steps) { axis_steps[axis] = steps; }
+        static uint32_t getSteps(int32_t axis) { return axis_steps[axis]; }
+        static void     setSteps(int32_t axis, uint32_t steps) { axis_steps[axis] = steps; }
 
-        static void assignMotor(int axis, int motor, int step_pin, bool step_invert, int dir_pin, bool dir_invert);
+        static void assignMotor(int32_t axis, int32_t motor, int32_t step_pin, bool step_invert, int32_t dir_pin, bool dir_invert);
 
         static void reset();  // Clean up old state and start fresh
         static void beginLowLatency();
@@ -77,13 +77,13 @@ namespace Machine {
         static void unstep();
 
         // Used to stop a motor quickly when a limit switch is hit
-        static bool* limit_var(int axis, int motor);
-        static void  limit(int axis, int motor);
-        static void  unlimit(int axis, int motor);
+        static bool* limit_var(int32_t axis, int32_t motor);
+        static void  limit(int32_t axis, int32_t motor);
+        static void  unlimit(int32_t axis, int32_t motor);
 
         // Used to stop a motor during ganged homint
-        static void block(int axis, int motor);
-        static void unblock(int axis, int motor);
+        static void block(int32_t axis, int32_t motor);
+        static void unblock(int32_t axis, int32_t motor);
 
         static uint32_t maxPulsesPerSec();
 

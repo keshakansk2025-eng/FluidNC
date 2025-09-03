@@ -12,7 +12,7 @@ void print_HEX(uint32_t data) {
 }
 
 void print_BIN(uint32_t data) {
-  int b = 31;
+  int32_t b = 31;
   for(; b>=24; b--){
     Serial.print((data>>b)&0b1);
   }

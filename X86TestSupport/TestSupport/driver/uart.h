@@ -68,7 +68,7 @@ typedef enum {
 } uart_hw_flowcontrol_t;
 
 typedef struct {
-    int                   baud_rate;           /*!< UART baud rate*/
+    int32_t                   baud_rate;           /*!< UART baud rate*/
     uart_word_length_t    data_bits;           /*!< UART byte size*/
     uart_parity_t         parity;              /*!< UART parity mode*/
     uart_stop_bits_t      stop_bits;           /*!< UART stop bits*/
@@ -77,15 +77,15 @@ typedef struct {
     bool                  use_ref_tick;        /*!< Set to true if UART should be clocked from REF_TICK */
 } uart_config_t;
 
-const int UART_FIFO_LEN = 128;
+const int32_t UART_FIFO_LEN = 128;
 
 esp_err_t uart_flush(uart_port_t uart_num);
 esp_err_t uart_param_config(uart_port_t uart_num, const uart_config_t* uart_config);
 esp_err_t uart_driver_install(
-    uart_port_t uart_num, int rx_buffer_size, int tx_buffer_size, int queue_size, QueueHandle_t* uart_queue, int intr_alloc_flags);
+    uart_port_t uart_num, int32_t rx_buffer_size, int32_t tx_buffer_size, int32_t queue_size, QueueHandle_t* uart_queue, int32_t intr_alloc_flags);
 esp_err_t uart_get_buffered_data_len(uart_port_t uart_num, size_t* size);
 int       uart_read_bytes(uart_port_t uart_num, uint8_t* buf, uint32_t length, TickType_t ticks_to_wait);
 int       uart_write_bytes(uart_port_t uart_num, const char* src, size_t size);
 esp_err_t uart_set_mode(uart_port_t uart_num, uart_mode_t mode);
-esp_err_t uart_set_pin(uart_port_t uart_num, int tx_io_num, int rx_io_num, int rts_io_num, int cts_io_num);
+esp_err_t uart_set_pin(uart_port_t uart_num, int32_t tx_io_num, int32_t rx_io_num, int32_t rts_io_num, int32_t cts_io_num);
 esp_err_t uart_wait_tx_done(uart_port_t uart_num, TickType_t ticks_to_wait);

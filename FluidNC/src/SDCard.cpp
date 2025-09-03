@@ -18,7 +18,7 @@ SDCard::SDCard() : _state(State::Idle) {}
 void SDCard::init() {
     static bool init_message = true;  // used to show messages only once.
     pinnum_t    csPin;
-    int         csFallback;
+    int32_t         csFallback;
 
     if (_cs.defined()) {
         if (!config->_spi->defined()) {

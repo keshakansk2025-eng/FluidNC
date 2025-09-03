@@ -12,8 +12,8 @@ class StringAppender;
 class String {
     std::string backbuf;
 
-    static std::string ValueToString(int value, int base);
-    static std::string DecToString(double value, int decimalPlaces);
+    static std::string ValueToString(int32_t value, int32_t base);
+    static std::string DecToString(double value, int32_t decimalPlaces);
 
     // Operator bool helper. Needed for older compilers:
     typedef void (String::*StringIfHelperType)() const;
@@ -30,8 +30,8 @@ public:
     String(const String& str) : backbuf(str.backbuf) {}
     explicit String(char c) : backbuf({ c }) {}
     explicit String(unsigned char ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
-    explicit String(int ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
-    explicit String(unsigned int ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
+    explicit String(int32_t ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
+    explicit String(unsigned int32_t ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
     explicit String(long ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
     explicit String(unsigned long ch, unsigned char base = 10) : backbuf(ValueToString(ch, base)) {}
     explicit String(float fl, unsigned char decimalPlaces = 2) : backbuf(DecToString(fl, decimalPlaces)) {}
@@ -46,11 +46,11 @@ public:
         return *this;
     }
 
-    unsigned char reserve(unsigned int size) {
+    unsigned char reserve(unsigned int32_t size) {
         backbuf.reserve(size);
         return true;
     }
-    inline unsigned int length() const { return static_cast<unsigned int>(backbuf.size()); }
+    inline unsigned int32_t length() const { return static_cast<unsigned int>(backbuf.size()); }
 
     inline void clear() { backbuf = ""; }
 
@@ -74,12 +74,12 @@ public:
         return true;
     }
 
-    unsigned char concat(int num) {
+    unsigned char concat(int32_t num) {
         backbuf += String(num).backbuf;
         return true;
     }
 
-    unsigned char concat(unsigned int num) {
+    unsigned char concat(unsigned int32_t num) {
         backbuf += String(num).backbuf;
         return true;
     }
@@ -119,11 +119,11 @@ public:
         concat(num);
         return (*this);
     }
-    String& operator+=(int num) {
+    String& operator+=(int32_t num) {
         concat(num);
         return (*this);
     }
-    String& operator+=(unsigned int num) {
+    String& operator+=(unsigned int32_t num) {
         concat(num);
         return (*this);
     }
@@ -148,8 +148,8 @@ public:
     friend StringAppender& operator+(const StringAppender& lhs, const char* cstr);
     friend StringAppender& operator+(const StringAppender& lhs, char c);
     friend StringAppender& operator+(const StringAppender& lhs, unsigned char num);
-    friend StringAppender& operator+(const StringAppender& lhs, int num);
-    friend StringAppender& operator+(const StringAppender& lhs, unsigned int num);
+    friend StringAppender& operator+(const StringAppender& lhs, int32_t num);
+    friend StringAppender& operator+(const StringAppender& lhs, unsigned int32_t num);
     friend StringAppender& operator+(const StringAppender& lhs, long num);
     friend StringAppender& operator+(const StringAppender& lhs, unsigned long num);
     friend StringAppender& operator+(const StringAppender& lhs, float num);
@@ -157,7 +157,7 @@ public:
 
     operator StringIfHelperType() const { return buffer() ? &String::StringIfHelper : 0; }
 
-    int           compareTo(const String& s) const { return backbuf.compare(s.backbuf); }
+    int32_t           compareTo(const String& s) const { return backbuf.compare(s.backbuf); }
     unsigned char equals(const String& s) const { return backbuf == s.backbuf; }
     unsigned char equals(const char* cstr) const { return backbuf == cstr; }
     unsigned char operator==(const String& rhs) const { return equals(rhs); }
@@ -174,7 +174,7 @@ public:
         auto pref = backbuf.substr(0, prefix.backbuf.size());
         return pref == prefix.backbuf;
     }
-    unsigned char startsWith(const String& prefix, unsigned int offset) const {
+    unsigned char startsWith(const String& prefix, unsigned int32_t offset) const {
         if (prefix.length() > backbuf.size()) {
             return false;
         }
@@ -190,16 +190,16 @@ public:
     }
 
     // character access
-    char  charAt(unsigned int index) const { return backbuf[index]; }
-    void  setCharAt(unsigned int index, char c) { backbuf[index] = c; }
-    char  operator[](unsigned int index) const { return backbuf[index]; }
-    char& operator[](unsigned int index) { return (&*backbuf.begin())[index]; }
-    void  getBytes(unsigned char* buf, unsigned int bufsize, unsigned int index = 0) const {
-        for (unsigned int i = 0; i < bufsize; ++i) {
+    char  charAt(unsigned int32_t index) const { return backbuf[index]; }
+    void  setCharAt(unsigned int32_t index, char c) { backbuf[index] = c; }
+    char  operator[](unsigned int32_t index) const { return backbuf[index]; }
+    char& operator[](unsigned int32_t index) { return (&*backbuf.begin())[index]; }
+    void  getBytes(unsigned char* buf, unsigned int32_t bufsize, unsigned int32_t index = 0) const {
+        for (unsigned int32_t i = 0; i < bufsize; ++i) {
             buf[i] = backbuf[i + index];
         }
     }
-    void toCharArray(char* buf, unsigned int bufsize, unsigned int index = 0) const { getBytes((unsigned char*)buf, bufsize, index); }
+    void toCharArray(char* buf, unsigned int32_t bufsize, unsigned int32_t index = 0) const { getBytes((unsigned char*)buf, bufsize, index); }
     const char* c_str() const { return backbuf.c_str(); }
     char*       begin() { return backbuf.size() == 0 ? nullptr : &*backbuf.begin(); }
     char*       end() { return begin() + backbuf.size(); }
@@ -207,23 +207,23 @@ public:
     const char* end() const { return begin() + backbuf.size(); }
 
     // search
-    int indexOf(char ch) const { return int(std::find(backbuf.begin(), backbuf.end(), ch) - backbuf.begin()); }
-    int indexOf(char ch, unsigned int fromIndex) const {
+    int32_t indexOf(char ch) const { return int(std::find(backbuf.begin(), backbuf.end(), ch) - backbuf.begin()); }
+    int32_t indexOf(char ch, unsigned int32_t fromIndex) const {
         return int(std::find(backbuf.begin() + fromIndex, backbuf.end(), ch) - backbuf.begin());
     }
 
-    // int    indexOf(const String& str) const;
-    // int    indexOf(const String& str, unsigned int fromIndex) const;
-    // int    lastIndexOf(char ch) const;
-    // int    lastIndexOf(char ch, unsigned int fromIndex) const;
-    // int    lastIndexOf(const String& str) const;
-    // int    lastIndexOf(const String& str, unsigned int fromIndex) const;
+    // int32_t    indexOf(const String& str) const;
+    // int32_t    indexOf(const String& str, unsigned int32_t fromIndex) const;
+    // int32_t    lastIndexOf(char ch) const;
+    // int32_t    lastIndexOf(char ch, unsigned int32_t fromIndex) const;
+    // int32_t    lastIndexOf(const String& str) const;
+    // int32_t    lastIndexOf(const String& str, unsigned int32_t fromIndex) const;
 
-    String substring(int index, int length) {
+    String substring(int32_t index, int32_t length) {
         auto s = backbuf.substr(index, length);
         return String(s);
     }
-    String substring(int index) {
+    String substring(int32_t index) {
         auto s = backbuf.substr(index);
         return String(s);
     }
@@ -244,8 +244,8 @@ public:
         s2              = s2.substr(0, idx) + replace.backbuf + s2.substr(idx + find.backbuf.size());
         backbuf         = s2;
     }
-    // void remove(unsigned int index);
-    // void remove(unsigned int index, unsigned int count);
+    // void remove(unsigned int32_t index);
+    // void remove(unsigned int32_t index, unsigned int32_t count);
     void trim();
 
     // parsing/conversion
@@ -271,8 +271,8 @@ public:
     StringAppender(const char* p) : String(p) {}
     StringAppender(char c) : String(c) {}
     StringAppender(unsigned char num) : String(num) {}
-    StringAppender(int num) : String(num) {}
-    StringAppender(unsigned int num) : String(num) {}
+    StringAppender(int32_t num) : String(num) {}
+    StringAppender(unsigned int32_t num) : String(num) {}
     StringAppender(long num) : String(num) {}
     StringAppender(unsigned long num) : String(num) {}
     StringAppender(float num) : String(num) {}

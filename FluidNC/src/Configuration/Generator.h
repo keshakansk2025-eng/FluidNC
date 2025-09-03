@@ -19,13 +19,13 @@ namespace Configuration {
         Generator(const Generator&)            = delete;
         Generator& operator=(const Generator&) = delete;
 
-        int      indent_;
+        int32_t  indent_;
         Channel& dst_;
         bool     lastIsNewline_ = false;
 
         inline void indent() {
             lastIsNewline_ = false;
-            for (int i = 0; i < indent_ * 2; ++i) {
+            for (int32_t i = 0; i < indent_ * 2; ++i) {
                 dst_ << ' ';
             }
         }
@@ -40,12 +40,12 @@ namespace Configuration {
         HandlerType handlerType() override { return HandlerType::Generator; }
 
     public:
-        Generator(Channel& dst, int indent = 0);
+        Generator(Channel& dst, int32_t indent = 0);
 
         void send_item(const char* name, const std::string& value) {
             LogStream s(dst_, "");
             lastIsNewline_ = false;
-            for (int i = 0; i < indent_ * 2; ++i) {
+            for (int32_t i = 0; i < indent_ * 2; ++i) {
                 s << ' ';
             }
             s << name;
@@ -61,7 +61,7 @@ namespace Configuration {
             }
         }
 
-        void item(const char* name, int& value, const int32_t minValue, const int32_t maxValue) override {
+        void item(const char* name, int32_t& value, const int32_t minValue, const int32_t maxValue) override {
             send_item(name, std::to_string(value));
         }
 
@@ -108,7 +108,9 @@ namespace Configuration {
             send_item(name, encodeUartMode(wordLength, parity, stopBits));
         }
 
-        void item(const char* name, std::string& value, const int minLength, const int maxLength) override { send_item(name, value); }
+        void item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) override {
+            send_item(name, value);
+        }
 
         void item(const char* name, bool& value) override { send_item(name, value ? "true" : "false"); }
 
@@ -117,7 +119,7 @@ namespace Configuration {
         void item(const char* name, Macro& value) override { send_item(name, value.get()); }
 
         void item(const char* name, IPAddress& value) override { send_item(name, IP_string(value)); }
-        void item(const char* name, int& value, const EnumItem* e) override {
+        void item(const char* name, int32_t& value, const EnumItem* e) override {
             const char* str = "unknown";
             for (; e->name; ++e) {
                 if (value == e->value) {

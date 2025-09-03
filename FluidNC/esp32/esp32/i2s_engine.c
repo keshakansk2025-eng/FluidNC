@@ -35,7 +35,7 @@ uint32_t i2s_frame_us;  // 1, 2 or 4
 
 static volatile uint32_t i2s_out_port_data = 0;
 
-static int i2s_out_initialized = 0;
+static int32_t i2s_out_initialized = 0;
 
 static pinnum_t i2s_out_ws_pin   = 255;
 static pinnum_t i2s_out_bck_pin  = 255;
@@ -51,7 +51,7 @@ static inline void i2s_out_reset_fifo_without_lock() {
     i2s_ll_rx_reset_fifo(&I2S0);
 }
 
-static int i2s_out_gpio_attach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
+static int32_t i2s_out_gpio_attach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
     // Route the i2s pins to the appropriate GPIO
     gpio_route(data, I2S0O_DATA_OUT23_IDX);
     gpio_route(bck, I2S0O_BCK_OUT_IDX);
@@ -59,9 +59,9 @@ static int i2s_out_gpio_attach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
     return 0;
 }
 
-const int I2S_OUT_DETACH_PORT_IDX = 0x100;
+const int32_t I2S_OUT_DETACH_PORT_IDX = 0x100;
 
-static int i2s_out_gpio_detach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
+static int32_t i2s_out_gpio_detach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
     // Route the i2s pins to the appropriate GPIO
     gpio_route(ws, I2S_OUT_DETACH_PORT_IDX);
     gpio_route(bck, I2S_OUT_DETACH_PORT_IDX);
@@ -69,9 +69,9 @@ static int i2s_out_gpio_detach(pinnum_t ws, pinnum_t bck, pinnum_t data) {
     return 0;
 }
 
-static int i2s_out_gpio_shiftout(uint32_t port_data) {
+static int32_t i2s_out_gpio_shiftout(uint32_t port_data) {
     gpio_write(i2s_out_ws_pin, 0);
-    for (int i = 0; i < I2S_OUT_NUM_BITS; i++) {
+    for (int32_t i = 0; i < I2S_OUT_NUM_BITS; i++) {
         gpio_write(i2s_out_data_pin, !!(port_data & (1 << (I2S_OUT_NUM_BITS - 1 - i))));
         gpio_write(i2s_out_bck_pin, 1);
         gpio_write(i2s_out_bck_pin, 0);
@@ -80,7 +80,7 @@ static int i2s_out_gpio_shiftout(uint32_t port_data) {
     return 0;
 }
 
-static int i2s_out_stop() {
+static int32_t i2s_out_stop() {
     // stop TX module
     i2s_ll_tx_stop(&I2S0);
 
@@ -103,7 +103,7 @@ static int i2s_out_stop() {
     return 0;
 }
 
-static int i2s_out_start() {
+static int32_t i2s_out_start() {
     if (!i2s_out_initialized) {
         return -1;
     }
@@ -253,9 +253,10 @@ int i2s_out_init(i2s_out_init_t* init_param) {
 
     i2s_ll_enable_dma(&I2S0, false);
 
-    i2s_ll_tx_set_chan_mod(&I2S0, I2S_CHANNEL_FMT_RIGHT_LEFT);  // Overridden by i2s_out_start
+    // i2s_ll_tx_set_chan_mod(&I2S0, I2S_CHANNEL_FMT_RIGHT_LEFT);  // Overridden by i2s_out_start
+    i2s_ll_tx_select_std_slot(&I2S0, I2S_STD_SLOT_BOTH, false);
 
-    i2s_ll_tx_set_sample_bit(&I2S0, I2S_BITS_PER_SAMPLE_32BIT, I2S_BITS_PER_SAMPLE_16BIT);
+    i2s_ll_tx_set_sample_bit(&I2S0, 32, I2S_DATA_BIT_WIDTH_16BIT);
     i2s_ll_tx_enable_mono_mode(&I2S0, false);
 
     i2s_ll_enable_dma(&I2S0, false);  // FIFO is not connected to DMA
@@ -278,12 +279,13 @@ int i2s_out_init(i2s_out_init_t* init_param) {
     i2s_ll_tx_enable_msb_shift(&I2S0, false);  // Do not use the Philips standard to avoid bit-shifting
 
 #ifdef CONFIG_IDF_TARGET_ESP32
-    i2s_ll_tx_clk_set_src(&I2S0, I2S_CLK_D2CLK);
+    i2s_ll_tx_clk_set_src(&I2S0, 0);  // I2S_CLK_D2CLK (160 MHz)
 #endif
     // N + b/a = 0
     //    i2s_ll_mclk_div_t first_div = { 2, 3, 47 };  // { N, b, a }
     //    i2s_ll_tx_set_clk(&I2S0, &first_div);
 
+#if 0
     i2s_ll_mclk_div_t div = { 5, 0, 0 };
     switch (i2s_frame_us) {
         case 1:
@@ -301,6 +303,21 @@ int i2s_out_init(i2s_out_init_t* init_param) {
             break;
     }
     i2s_ll_tx_set_clk(&I2S0, &div);
+#else
+    switch (i2s_frame_us) {
+        case 1:
+            // Fractional divisor 2.5, i.e. 2 + 16/32
+            i2s_ll_set_raw_mclk_div(&I2S0, 2, 32, 16);
+            break;
+        case 2:
+            i2s_ll_set_raw_mclk_div(&I2S0, 5, 0, 0);
+            break;
+        case 4:
+        default:
+            i2s_ll_set_raw_mclk_div(&I2S0, 10, 0, 0);
+            break;
+    }
+#endif
 
     i2s_ll_tx_set_bck_div_num(&I2S0, 2);
 
@@ -358,7 +375,7 @@ static void IRAM_ATTR i2s_isr() {
     uint32_t remaining_pulse_counts = _remaining_pulse_counts;
     uint32_t remaining_delay_counts = _remaining_delay_counts;
 
-    int i = FIFO_RELOAD;
+    int32_t i = FIFO_RELOAD;
     do {
         if (remaining_pulse_counts) {
             I2S0.fifo_wr = pulse_data;
@@ -431,14 +448,14 @@ static uint32_t init_engine(uint32_t dir_delay_us, uint32_t pulse_us, uint32_t f
     return _pulse_counts * i2s_frame_us;
 }
 
-static int init_step_pin(int step_pin, int step_invert) {
+static int32_t init_step_pin(int32_t step_pin, int32_t step_invert) {
     return step_pin;
 }
 
 // This modifies a memory variable that contains the desired
 // pin states.  Later, that variable will be transferred to
 // the I2S FIFO to change all the affected pins at once.
-static IRAM_ATTR void set_dir_pin(int pin, int level) {
+static IRAM_ATTR void set_dir_pin(int32_t pin, int32_t level) {
     i2s_out_write(pin, level);
 }
 
@@ -456,7 +473,7 @@ static void IRAM_ATTR start_step() {
     _pulse_data = i2s_out_port_data;
 }
 
-static IRAM_ATTR void set_step_pin(int pin, int level) {
+static IRAM_ATTR void set_step_pin(int32_t pin, int32_t level) {
     uint32_t bit = 1 << pin;
     if (level) {
         _pulse_data |= bit;
@@ -467,7 +484,7 @@ static IRAM_ATTR void set_step_pin(int pin, int level) {
 
 static void IRAM_ATTR finish_step() {}
 
-static int IRAM_ATTR start_unstep() {
+static int32_t IRAM_ATTR start_unstep() {
     return 1;
 }
 

@@ -7,7 +7,7 @@
 #include "Logging.h"
 
 // cppcheck-suppress unusedFunction
-bool i2c_master_init(int bus_number, pinnum_t sda_pin, pinnum_t scl_pin, uint32_t frequency) {
+bool i2c_master_init(int32_t bus_number, pinnum_t sda_pin, pinnum_t scl_pin, uint32_t frequency) {
     i2c_config_t conf = {
         .mode          = I2C_MODE_MASTER,
         .sda_io_num    = (gpio_num_t)sda_pin,
@@ -41,7 +41,7 @@ bool i2c_master_init(int bus_number, pinnum_t sda_pin, pinnum_t scl_pin, uint32_
 }
 
 // cppcheck-suppress unusedFunction
-int i2c_write(int bus_number, uint8_t address, const uint8_t* data, size_t count) {
+int32_t i2c_write(int32_t bus_number, uint8_t address, const uint8_t* data, size_t count) {
 #if 0
         esp_err_t        ret = ESP_FAIL;
         i2c_cmd_handle_t cmd = NULL;
@@ -82,13 +82,13 @@ int i2c_write(int bus_number, uint8_t address, const uint8_t* data, size_t count
     if (err == ESP_OK) {
         return count;
     } else {
-        log_warn("Error writing to I2C device: " << err);
+        log_warn("Error writing to I2C device: " << static_cast<int32_t>(err));
         return -1;
     }
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-int i2c_read(int bus_number, uint8_t address, uint8_t* data, size_t count) {
+int32_t i2c_read(int32_t bus_number, uint8_t address, uint8_t* data, size_t count) {
     return i2c_master_read_from_device((i2c_port_t)bus_number, address, data, count, 10 / portTICK_RATE_MS) ? -1 : count;
 }

@@ -23,13 +23,13 @@ namespace Configuration {
 
             // On entry, the token is for the section that invoked us.
             // We will handle following nodes with indents greater than entryIndent
-            int entryIndent = _parser._token._indent;
+            int32_t entryIndent = _parser._token._indent;
             log_parser_verbose("Entered section " << name << " at indent " << entryIndent);
 
             // The next token controls what we do next.  If thisIndent is greater
             // than entryIndent, there are some subordinate tokens.
             _parser.Tokenize();
-            int thisIndent = _parser._token._indent;
+            int32_t thisIndent = _parser._token._indent;
             log_parser_verbose("thisIndent " << _parser.key() << " " << thisIndent);
 
             // If thisIndent <= entryIndent, the section is empty - there are
@@ -94,7 +94,7 @@ namespace Configuration {
             }
         }
 
-        void item(const char* name, int& value, const EnumItem* e) override {
+        void item(const char* name, int32_t& value, const EnumItem* e) override {
             if (_parser.is(name)) {
                 value = _parser.enumValue(e);
             }
@@ -131,7 +131,7 @@ namespace Configuration {
             }
         }
 
-        void item(const char* name, std::string& value, const int minLength, const int maxLength) override {
+        void item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) override {
             if (_parser.is(name)) {
                 value = _parser.stringValue();
             }

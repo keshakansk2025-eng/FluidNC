@@ -7,14 +7,14 @@
 
 namespace Machine {
     UserOutputs::UserOutputs() {
-        for (int i = 0; i < MaxUserAnalogPin; ++i) {
+        for (int32_t i = 0; i < MaxUserAnalogPin; ++i) {
             _analogFrequency[i] = 5000;
         }
     }
     UserOutputs::~UserOutputs() {}
 
     void UserOutputs::init() {
-        for (int i = 0; i < MaxUserDigitalPin; ++i) {
+        for (int32_t i = 0; i < MaxUserDigitalPin; ++i) {
             Pin& pin = _digitalOutput[i];
             if (pin.defined()) {
                 pin.setAttr(Pin::Attr::Output);
@@ -23,7 +23,7 @@ namespace Machine {
             }
         }
 
-        for (int i = 0; i < MaxUserAnalogPin; ++i) {
+        for (int32_t i = 0; i < MaxUserAnalogPin; ++i) {
             uint8_t resolution_bits;
             Pin&    pin = _analogOutput[i];
             if (pin.defined()) {

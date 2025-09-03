@@ -30,11 +30,11 @@ private:
     FluidPath(const char* name, const char* fs, std::error_code*);
 
     static int _refcnt;
-    bool       _isSD = false;
+    bool           _isSD = false;
 };
 
 #include <Print.h>
 inline Print& operator<<(Print& lhs, FluidPath path) {
-    lhs.print(path.u8string().c_str());
+    lhs.print(reinterpret_cast<const char*>(path.u8string().c_str()));
     return lhs;
 }

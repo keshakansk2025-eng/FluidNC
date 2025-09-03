@@ -7,7 +7,7 @@
 #    include "Driver/fluidnc_i2c.h"
 
 namespace Machine {
-    I2CBus::I2CBus(int busNumber) : _busNumber(busNumber) {}
+    I2CBus::I2CBus(int32_t busNumber) : _busNumber(busNumber) {}
 
     void I2CBus::validate() {
         if (_sda.defined() || _scl.defined()) {
@@ -34,7 +34,7 @@ namespace Machine {
             log_error("I2C init failed");
         }
 
-        int nDevices = 0;
+        int32_t nDevices = 0;
         log_info("Scanning...");
         for (uint8_t address = 1; address < 127; address++) {
             uint8_t buf[1];
@@ -51,17 +51,17 @@ namespace Machine {
         }
     }
 
-    int I2CBus::write(uint8_t address, const uint8_t* data, size_t count) {
+    int32_t I2CBus::write(uint8_t address, const uint8_t* data, size_t count) {
         if (_error) {
             return -1;
         }
 
-        log_info("I2C write: " << int(address); for (int i = 0; i < count; ++i) { ss << ' ' << int(data[i]); });
+        log_info("I2C write: " << int(address); for (int32_t i = 0; i < count; ++i) { ss << ' ' << int(data[i]); });
 
         return i2c_write(_busNumber, address, data, count);
     }
 
-    int I2CBus::read(uint8_t address, uint8_t* data, size_t count) {
+    int32_t I2CBus::read(uint8_t address, uint8_t* data, size_t count) {
         if (_error) {
             return -1;
         }
@@ -69,7 +69,7 @@ namespace Machine {
         return i2c_read(_busNumber, address, data, count);
     }
 #    if 0
-    I2CBus::I2CBus(int busNumber) : _busNumber(busNumber) {}
+    I2CBus::I2CBus(int32_t busNumber) : _busNumber(busNumber) {}
 
     void I2CBus::validate() {
         if (_sda.defined() || _scl.defined()) {
@@ -100,7 +100,7 @@ namespace Machine {
         }
         i2c->begin(int(sdaPin), int(sclPin), _frequency);
 
-        int nDevices = 0;
+        int32_t nDevices = 0;
         log_info("Scanning...");
         for (uint8_t address = 1; address < 127; address++) {
             i2c->beginTransmission(address);
@@ -117,11 +117,11 @@ namespace Machine {
         }
     }
 
-    const char* I2CBus::ErrorDescription(int code) {
+    const char* I2CBus::ErrorDescription(int32_t code) {
         return esp_err_to_name(code);
     }
 
-    int I2CBus::write(uint8_t address, const uint8_t* data, size_t count) {
+    int32_t I2CBus::write(uint8_t address, const uint8_t* data, size_t count) {
         // log_info("I2C write addr=" << int(address) << ", count=" << int(count) << ", data " << (data ? "non null" : "null") << ", i2c "
         //                             << (i2c ? "non null" : "null"));
 
@@ -132,7 +132,7 @@ namespace Machine {
         return i2c->endTransmission();  // i2c_err_t, see header file
     }
 
-    int I2CBus::read(uint8_t address, uint8_t* data, size_t count) {
+    int32_t I2CBus::read(uint8_t address, uint8_t* data, size_t count) {
         // log_info("I2C read addr=" << int(address) << ", count=" << int(count) << ", data " << (data ? "non null" : "null") << ", i2c "
         //                            << (i2c ? "non null" : "null"));
 

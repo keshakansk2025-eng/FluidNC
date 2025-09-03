@@ -34,7 +34,7 @@ namespace std _GLIBCXX_VISIBILITY(default) {
         inline bool is_set(Bitmask obj, Bitmask bits) {
             return (obj & bits) != Bitmask::none;
         }
-        inline bool is_not_found_errno(int err) noexcept { return err == ENOENT || err == ENOTDIR; }
+        inline bool is_not_found_errno(int32_t err) noexcept { return err == ENOENT || err == ENOTDIR; }
 #ifdef _GLIBCXX_HAVE_SYS_STAT_H
         typedef struct ::stat                        stat_type;
         inline std::chrono::system_clock::time_point file_time(const stat_type& st, std::error_code& ec) noexcept {

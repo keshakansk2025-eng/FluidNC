@@ -11,8 +11,8 @@
 #include <iostream>
 
 #ifndef ENABLE_VIRTUAL_TERMINAL_INPUT
-const int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
-const int ENABLE_VIRTUAL_TERMINAL_INPUT      = 0x0200;
+const int32_t ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+const int32_t ENABLE_VIRTUAL_TERMINAL_INPUT      = 0x0200;
 #endif
 
 static HANDLE hStdin;
@@ -80,7 +80,7 @@ int WinConsole::available(void) {
     return kbhit() ? 1 : 0;
 }
 int WinConsole::read() {
-    int n;
+    int32_t n;
     if ((n = available()) < 1) {
         return -1;
     }

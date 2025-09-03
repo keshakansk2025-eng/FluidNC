@@ -72,16 +72,16 @@ void notifyf(const char* title, const char* format, ...) {
 Counter report_ovr_counter = 0;
 Counter report_wco_counter = 0;
 
-static const int coordStringLen = 20;
-static const int axesStringLen  = coordStringLen * MAX_N_AXIS;
+static const int32_t coordStringLen = 20;
+static const int32_t axesStringLen  = coordStringLen * MAX_N_AXIS;
 
 // Sends the axis values to the output channel
 static std::string report_util_axis_values(const float* axis_value) {
     std::ostringstream msg;
     auto               n_axis = Axes::_numberAxis;
     for (size_t idx = 0; idx < n_axis; idx++) {
-        int   decimals;
-        float value = axis_value[idx];
+        int32_t decimals;
+        float   value = axis_value[idx];
         if (idx >= A_AXIS && idx <= C_AXIS) {
             // Rotary axes are in degrees so mm vs inch is not
             // relevant.  Three decimal places is probably overkill
@@ -206,8 +206,8 @@ void report_tlo(Channel& channel) {}
 
 void report_ngc_coord(CoordIndex coord, Channel& channel) {
     if (coord == CoordIndex::TLO) {  // Non-persistent tool length offset
-        float tlo      = gc_state.tool_length_offset;
-        int   decimals = 3;
+        float   tlo      = gc_state.tool_length_offset;
+        int32_t decimals = 3;
         if (config->_reportInches) {
             tlo *= INCH_PER_MM;
             decimals = 4;
@@ -365,7 +365,7 @@ void report_gcode_modes(Channel& channel) {
     }
 
     msg << " T" << gc_state.selected_tool;
-    int digits = config->_reportInches ? 1 : 0;
+    int32_t digits = config->_reportInches ? 1 : 0;
     msg << " F" << std::fixed << std::setprecision(digits) << gc_state.feed_rate;
     msg << " S" << uint32_t(gc_state.spindle_speed);
     log_stream(channel, "[GC:" << msg.str())
@@ -426,7 +426,7 @@ void report_echo_line_received(const char* line, Channel& channel) {
 void mpos_to_wpos(float* position) {
     float* wco    = get_wco();
     auto   n_axis = Axes::_numberAxis;
-    for (int idx = 0; idx < n_axis; idx++) {
+    for (int32_t idx = 0; idx < n_axis; idx++) {
         position[idx] -= wco[idx];
     }
 }
@@ -617,11 +617,11 @@ void report_realtime_status(Channel& channel) {
     // The destructor sends the line when msg goes out of scope
 }
 
-void hex_msg(uint8_t* buf, const char* prefix, int len) {
+void hex_msg(uint8_t* buf, const char* prefix, int32_t len) {
     char report[200];
     char temp[20];
     sprintf(report, "%s", prefix);
-    for (int i = 0; i < len; i++) {
+    for (int32_t i = 0; i < len; i++) {
         sprintf(temp, " %02X", buf[i]);
         strcat(report, temp);
     }

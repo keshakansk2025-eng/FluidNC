@@ -39,15 +39,15 @@ class Stream : public Print {
 protected:
     unsigned long _timeout;         // number of milliseconds to wait for the next char before aborting timed read
     unsigned long _startMillis;     // used for timeout measurement
-    int           timedRead();      // private method to read stream with timeout
-    int           timedPeek();      // private method to peek stream with timeout
-    int           peekNextDigit();  // returns the next numeric digit in the stream or -1 if timeout
+    int32_t       timedRead();      // private method to read stream with timeout
+    int32_t       timedPeek();      // private method to peek stream with timeout
+    int32_t       peekNextDigit();  // returns the next numeric digit in the stream or -1 if timeout
 
 public:
-    virtual int  available() = 0;
-    virtual int  read()      = 0;
-    virtual int  peek()      = 0;
-    virtual void flush()     {};
+    virtual int32_t available() = 0;
+    virtual int32_t read()      = 0;
+    virtual int32_t peek()      = 0;
+    virtual void    flush() {};
 
     Stream() : _startMillis(0) { _timeout = 1000; }
     virtual ~Stream() {}

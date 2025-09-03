@@ -70,10 +70,10 @@ bool Macro::run(Channel* channel) {
     return false;
 }
 
-Error MacroChannel::readLine(char* line, int maxlen) {
-    int                len       = 0;
+Error MacroChannel::readLine(char* line, int32_t maxlen) {
+    int32_t                len       = 0;
     const std::string& gcode     = _macro->_gcode;
-    const int          gcode_len = gcode.length();
+    const int32_t          gcode_len = gcode.length();
     while (_position < gcode_len) {
         if (len >= maxlen) {
             return Error::LineLengthExceeded;

@@ -7,7 +7,7 @@
 
 std::map<std::string, std::string> HashFS::localFsHashes;
 
-static char hexNibble(int i) {
+static char hexNibble(int32_t i) {
     return "0123456789ABCDEF"[i & 0xf];
 }
 
@@ -15,7 +15,7 @@ static Error hashFile(const std::filesystem::path& ipath, std::string& str) {  /
     uint8_t shaResult[32];
 
     try {
-        FileStream inFile { ipath.u8string(), "r" };
+        FileStream inFile { reinterpret_cast<const char*>(ipath.u8string().c_str()), "r" };
         uint8_t    buf[512];
         size_t     len;
 
@@ -40,7 +40,7 @@ static Error hashFile(const std::filesystem::path& ipath, std::string& str) {  /
     }
 
     str = '"';
-    for (int i = 0; i < 32; i++) {
+    for (int32_t i = 0; i < 32; i++) {
         uint8_t b = shaResult[i];
         str += hexNibble(b >> 4);
         str += hexNibble(b);
@@ -55,14 +55,14 @@ void HashFS::report_change() {
 }
 
 void HashFS::delete_file(const std::filesystem::path& path, bool report) {
-    localFsHashes.erase(path.filename().u8string());
+    localFsHashes.erase(reinterpret_cast<const char*>(path.filename().u8string().c_str()));
     if (report) {
         report_change();
     }
 }
 
 bool HashFS::file_is_hashable(const std::filesystem::path& path) {
-    int count = 0;
+    int32_t count = 0;
     for (auto it = path.begin(); it != path.end(); ++it) {
         ++count;
     }
@@ -82,7 +82,7 @@ void HashFS::rehash_file(const std::filesystem::path& path, bool report) {
         if (hashFile(path, hash) != Error::Ok) {
             delete_file(path, false);
         } else {
-            localFsHashes[path.filename().u8string()] = hash;
+            localFsHashes[reinterpret_cast<const char*>(path.filename().u8string().c_str())] = hash;
         }
     }
     if (report) {
@@ -117,7 +117,7 @@ void HashFS::hash_all() {
 std::string HashFS::hash(const std::filesystem::path& path, bool useCacheOnly /*= false*/) {
     if (file_is_hashable(path)) {
         std::map<std::string, std::string>::const_iterator it;
-        it = localFsHashes.find(path.filename().u8string());
+        it = localFsHashes.find(reinterpret_cast<const char*>(path.filename().u8string().c_str()));
         if (it != localFsHashes.end()) {
             return it->second;
         }

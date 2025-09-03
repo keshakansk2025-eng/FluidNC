@@ -87,6 +87,15 @@ namespace string_util {
 
         return true;
     }
+    bool from_decimal(std::string_view sv, int& value) {
+        auto [ptr, ec] = std::from_chars(sv.data(), sv.data() + sv.size(), value);
+
+        if (ec == std::errc::invalid_argument || ec == std::errc::result_out_of_range || ptr != sv.data() + sv.size()) {
+            return false;
+        }
+
+        return true;
+    }
 
     bool from_float(std::string_view sv, float& value) {
         // std::from_chars() does not work for float arguments on ESP32

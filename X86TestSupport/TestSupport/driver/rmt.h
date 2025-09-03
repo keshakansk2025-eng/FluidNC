@@ -92,7 +92,7 @@ typedef struct {
     rmt_mode_t    rmt_mode;      /*!< RMT mode: transmitter or receiver */
     rmt_channel_t channel;       /*!< RMT channel */
     uint8_t       clk_div;       /*!< RMT channel counter divider */
-    int           gpio_num;      /*!< RMT GPIO number */
+    int32_t           gpio_num;      /*!< RMT GPIO number */
     uint8_t       mem_block_num; /*!< RMT memory block number */
     union {
         rmt_tx_config_t tx_config; /*!< RMT TX parameter */

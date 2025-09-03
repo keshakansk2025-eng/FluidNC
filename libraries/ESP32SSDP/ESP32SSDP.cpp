@@ -187,7 +187,7 @@ void SSDPClass::_send(ssdp_method_t method){
   char valueBuffer[strlen_P(_ssdp_notify_template)+1];
   strcpy_P(valueBuffer, (method == NONE)?_ssdp_response_template:_ssdp_notify_template);
 
-  int len = snprintf_P(buffer, sizeof(buffer),
+  int32_t len = snprintf_P(buffer, sizeof(buffer),
     _ssdp_packet_template,
     valueBuffer,
     SSDP_INTERVAL,
@@ -243,7 +243,7 @@ void SSDPClass::schema(WiFiClient client){
 }
 
 void SSDPClass::_update(){
-  int nbBytes  =0;
+  int32_t nbBytes  =0;
   char * packetBuffer = nullptr;
   
   if(!_pending && _server) {
@@ -259,8 +259,8 @@ void SSDPClass::_update(){
 
     char buffer[SSDP_BUFFER_SIZE] = {0};
     packetBuffer = new char[nbBytes +1];
-    int message_size=_server->read(packetBuffer,nbBytes);
-    int process_pos = 0;
+    int32_t message_size=_server->read(packetBuffer,nbBytes);
+    int32_t process_pos = 0;
     packetBuffer[message_size]='\0';
     _respondToAddr = _server->remoteIP();
     _respondToPort = _server->remotePort();
@@ -443,7 +443,7 @@ void SSDPClass::_startTimer() {
   _stopTimer();
   _timer= new SSDPTimer();
   ETSTimer* tm = &(_timer->timer);
-  const int interval = 1000;
+  const int32_t interval = 1000;
   ets_timer_disarm(tm);
   ets_timer_setfn(tm, reinterpret_cast<ETSTimerFunc*>(&SSDPClass::_onTimerStatic), reinterpret_cast<void*>(this));
   ets_timer_arm(tm, interval, 1 /* repeat */);

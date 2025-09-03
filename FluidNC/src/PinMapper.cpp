@@ -31,16 +31,16 @@
 namespace {
     class PinMap {
     public:
-        static const int BOUNDARY = MAX_N_GPIO;
+        static const int32_t BOUNDARY = MAX_N_GPIO;
 
     private:
-        static const int N_PIN_MAPPINGS = 256 - BOUNDARY;
+        static const int32_t N_PIN_MAPPINGS = 256 - BOUNDARY;
 
     public:
         Pin* _mapping[N_PIN_MAPPINGS];
 
         PinMap() {
-            for (int i = 0; i < N_PIN_MAPPINGS; ++i) {
+            for (int32_t i = 0; i < N_PIN_MAPPINGS; ++i) {
                 _mapping[i] = nullptr;
             }
         }

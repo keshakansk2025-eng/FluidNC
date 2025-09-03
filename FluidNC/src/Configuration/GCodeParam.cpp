@@ -94,13 +94,13 @@ namespace Configuration {
         }
     }
 
-    void GCodeParam::item(const char* name, std::string& value, const int minLength, const int maxLength) {
+    void GCodeParam::item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) {
         if (is(name)) {
             error();
         }
     }
 
-    void GCodeParam::item(const char* name, int& value, const EnumItem* e) {
+    void GCodeParam::item(const char* name, int32_t& value, const EnumItem* e) {
         if (is(name)) {
             isHandled_ = true;
             if (_get) {

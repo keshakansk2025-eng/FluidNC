@@ -73,13 +73,13 @@ public:
     static const bool On  = true;
     static const bool Off = false;
 
-    static const int NO_INTERRUPT = 0;
-    static const int RISING_EDGE  = 1;
-    static const int FALLING_EDGE = 2;
-    static const int EITHER_EDGE  = 3;
+    static const int32_t NO_INTERRUPT = 0;
+    static const int32_t RISING_EDGE  = 1;
+    static const int32_t FALLING_EDGE = 2;
+    static const int32_t EITHER_EDGE  = 3;
 
-    static const int ASSERTING   = 0x10;
-    static const int DEASSERTING = 0x11;
+    static const int32_t ASSERTING   = 0x10;
+    static const int32_t DEASSERTING = 0x11;
 
     static Pin  create(std::string_view str);
     static bool validate(const char* str);
@@ -111,7 +111,7 @@ public:
     }
     inline int8_t driveStrength() const { return _detail->driveStrength(); }
     inline bool   canStep() { return _detail->canStep(); }
-    inline int    index() { return _detail->_index; }
+    inline int32_t    index() { return _detail->_index; }
     inline bool   inverted() { return _detail->_inverted; }
 
     inline void write(bool value) const { _detail->write(value); };

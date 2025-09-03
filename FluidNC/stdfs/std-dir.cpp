@@ -129,7 +129,7 @@ fs::recursive_directory_iterator::recursive_directory_iterator(const path& p, di
         if (ecptr ? sp->top().advance(*ecptr) : sp->top().advance())
             _M_dirs.swap(sp);
     } else {
-        const int err = errno;
+        const int32_t err = errno;
         if (err == EACCES && is_set(options, fs::directory_options::skip_permission_denied)) {
             if (ecptr)
                 ecptr->clear();

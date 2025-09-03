@@ -22,7 +22,7 @@ namespace Pins {
 
         int8_t _driveStrength = -1;
 
-        void setDriveStrength(int n, PinAttributes attr);
+        void setDriveStrength(int32_t n, PinAttributes attr);
 
     public:
         GPIOPinDetail(pinnum_t index, PinOptionsParser options);
@@ -30,8 +30,8 @@ namespace Pins {
         PinCapabilities capabilities() const override;
 
         // I/O:
-        void          write(int high) override;
-        int           read() override;
+        void          write(int32_t high) override;
+        int32_t       read() override;
         void          setAttr(PinAttributes value, uint32_t frequency) override;
         PinAttributes getAttr() const override;
 

@@ -51,7 +51,7 @@ size_t Print::printf(const char* format, ...) {
     va_list copy;
     va_start(arg, format);
     va_copy(copy, arg);
-    int len = vsnprintf(temp, sizeof(loc_buf), format, copy);
+    int32_t len = vsnprintf(temp, sizeof(loc_buf), format, copy);
     va_end(copy);
     if (len < 0) {
         va_end(arg);
@@ -85,20 +85,20 @@ size_t Print::print(char c) {
     return write(c);
 }
 
-size_t Print::print(unsigned char b, int base) {
+size_t Print::print(unsigned char b, int32_t base) {
     return print((unsigned long)b, base);
 }
 
-size_t Print::print(int n, int base) {
+size_t Print::print(int32_t n, int32_t base) {
     return print((long)n, base);
 }
 
-size_t Print::print(unsigned int n, int base) {
+size_t Print::print(unsigned int32_t n, int32_t base) {
     return print((unsigned long)n, base);
 }
 
-size_t Print::print(long n, int base) {
-    int t = 0;
+size_t Print::print(long n, int32_t base) {
+    int32_t t = 0;
     if (base == 10 && n < 0) {
         t = print('-');
         n = -n;
@@ -106,7 +106,7 @@ size_t Print::print(long n, int base) {
     return printNumber(static_cast<unsigned long>(n), base) + t;
 }
 
-size_t Print::print(unsigned long n, int base) {
+size_t Print::print(unsigned long n, int32_t base) {
     if (base == 0) {
         return write(n);
     } else {
@@ -114,8 +114,8 @@ size_t Print::print(unsigned long n, int base) {
     }
 }
 
-size_t Print::print(long long n, int base) {
-    int t = 0;
+size_t Print::print(long long n, int32_t base) {
+    int32_t t = 0;
     if (base == 10 && n < 0) {
         t = print('-');
         n = -n;
@@ -123,7 +123,7 @@ size_t Print::print(long long n, int base) {
     return printNumber(static_cast<unsigned long long>(n), base) + t;
 }
 
-size_t Print::print(unsigned long long n, int base) {
+size_t Print::print(unsigned long long n, int32_t base) {
     if (base == 0) {
         return write(n);
     } else {
@@ -131,7 +131,7 @@ size_t Print::print(unsigned long long n, int base) {
     }
 }
 
-size_t Print::print(double n, int digits) {
+size_t Print::print(double n, int32_t digits) {
     return printFloat(n, digits);
 }
 
@@ -174,49 +174,49 @@ size_t Print::println(char c) {
     return n;
 }
 
-size_t Print::println(unsigned char b, int base) {
+size_t Print::println(unsigned char b, int32_t base) {
     size_t n = print(b, base);
     n += println();
     return n;
 }
 
-size_t Print::println(int num, int base) {
+size_t Print::println(int32_t num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(unsigned int num, int base) {
+size_t Print::println(unsigned int32_t num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(long num, int base) {
+size_t Print::println(long num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(unsigned long num, int base) {
+size_t Print::println(unsigned long num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(long long num, int base) {
+size_t Print::println(long long num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(unsigned long long num, int base) {
+size_t Print::println(unsigned long long num, int32_t base) {
     size_t n = print(num, base);
     n += println();
     return n;
 }
 
-size_t Print::println(double num, int digits) {
+size_t Print::println(double num, int32_t digits) {
     size_t n = print(num, digits);
     n += println();
     return n;
@@ -322,7 +322,7 @@ size_t Print::printFloat(double number, uint8_t digits) {
     // Extract digits from the remainder one at a time
     while (digits-- > 0) {
         remainder *= 10.0;
-        int toPrint = int(remainder);
+        int32_t toPrint = int(remainder);
         n += print(toPrint);
         remainder -= toPrint;
     }

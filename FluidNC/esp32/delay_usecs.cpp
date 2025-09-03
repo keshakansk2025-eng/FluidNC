@@ -2,6 +2,7 @@
 
 #include <esp_attr.h>  // IRAM_ATTR
 #include <xtensa/core-macros.h>
+#include "esp_private/esp_clk.h"
 
 #include <sdkconfig.h>
 

@@ -8,11 +8,14 @@
 #include "Driver/fluidnc_gpio.h"
 #include "Driver/StepTimer.h"
 #include <driver/rmt.h>
+#include <soc/rmt_struct.h>
 #include <esp32-hal-gpio.h>
 #include <esp_attr.h>  // IRAM_ATTR
 
 static uint32_t _pulse_delay_us;
 static uint32_t _dir_delay_us;
+
+extern rmt_dev_t RMT;
 
 static uint32_t init_engine(uint32_t dir_delay_us, uint32_t pulse_delay_us, uint32_t frequency, bool (*callback)(void)) {
     stepTimerInit(frequency, callback);
@@ -25,7 +28,7 @@ static uint32_t init_engine(uint32_t dir_delay_us, uint32_t pulse_delay_us, uint
 // setting the timing according to dir_delay_us and pulse_delay_us.
 // Return the index of that RMT channel which will be presented to
 // set_step_pin() later.
-static int init_step_pin(int step_pin, int step_inverted) {
+static int32_t init_step_pin(int32_t step_pin, int32_t step_inverted) {
     static rmt_channel_t next_RMT_chan_num = RMT_CHANNEL_0;
     if (next_RMT_chan_num == RMT_CHANNEL_MAX) {
         return -1;
@@ -66,7 +69,7 @@ static int init_step_pin(int step_pin, int step_inverted) {
 }
 
 // The direction pin is a GPIO that is accessed in the usual way
-static IRAM_ATTR void set_dir_pin(int pin, int level) {
+static IRAM_ATTR void set_dir_pin(int32_t pin, int32_t level) {
     gpio_write(pin, level);
 }
 
@@ -78,7 +81,7 @@ static IRAM_ATTR void start_step() {}
 
 // Restart the RMT which has already been configured
 // for the desired pulse length, polarity, and direction delay
-static IRAM_ATTR void set_step_pin(int pin, int level) {
+static IRAM_ATTR void set_step_pin(int32_t pin, int32_t level) {
 #ifdef CONFIG_IDF_TARGET_ESP32
     RMT.conf_ch[pin].conf1.mem_rd_rst = 1;
     RMT.conf_ch[pin].conf1.mem_rd_rst = 0;
@@ -98,7 +101,7 @@ static IRAM_ATTR void finish_step() {}
 // of the pulse trailing edges.
 // Return 1 (true) to tell Stepping.cpp that it can
 // skip the rest of the step pin deassertion process
-static IRAM_ATTR int start_unstep() {
+static IRAM_ATTR int32_t start_unstep() {
     return 1;
 }
 

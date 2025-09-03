@@ -28,7 +28,7 @@
 
 // private method to read stream with timeout
 int Stream::timedRead() {
-    int c;
+    int32_t c;
     _startMillis = millis();
     do {
         c = read();
@@ -41,7 +41,7 @@ int Stream::timedRead() {
 
 // private method to peek stream with timeout
 int Stream::timedPeek() {
-    int c;
+    int32_t c;
     _startMillis = millis();
     do {
         c = peek();
@@ -55,7 +55,7 @@ int Stream::timedPeek() {
 // returns peek of the next digit in the stream or -1 if timeout
 // discards non-numeric characters
 int Stream::peekNextDigit() {
-    int c;
+    int32_t c;
     while (1) {
         c = timedPeek();
         if (c < 0) {
@@ -90,7 +90,7 @@ bool Stream::find(const char* target) {
 // reads data from the stream until the target string of given length is found
 // returns true if target string is found, false if timed out
 bool Stream::find(const char* target, size_t targetLen) {
-    int targetIdx = 0;
+    int32_t targetIdx = 0;
     while (targetIdx < targetLen) {
         auto current = read();
         if (current == target[targetIdx]) {
@@ -121,7 +121,7 @@ bool Stream::findUntil(const char* target, size_t targetLen, const char* termina
     }
 }
 
-int Stream::findMulti(struct Stream::MultiTarget* targets, int tCount) {
+int32_t Stream::findMulti(struct Stream::MultiTarget* targets, int32_t tCount) {
     // any zero length target string automatically matches and would make
     // a mess of the rest of the algorithm.
     for (struct MultiTarget* t = targets; t < targets + tCount; ++t) {
@@ -130,7 +130,7 @@ int Stream::findMulti(struct Stream::MultiTarget* targets, int tCount) {
     }
 
     while (1) {
-        int c = timedRead();
+        int32_t c = timedRead();
         if (c < 0)
             return -1;
 
@@ -150,7 +150,7 @@ int Stream::findMulti(struct Stream::MultiTarget* targets, int tCount) {
             if (t->index == 0)
                 continue;
 
-            int origIndex = t->index;
+            int32_t origIndex = t->index;
             do {
                 --t->index;
                 // first check if current char works against the new current index
@@ -164,7 +164,7 @@ int Stream::findMulti(struct Stream::MultiTarget* targets, int tCount) {
                 }
 
                 // otherwise we need to check the rest of the found string
-                int    diff = origIndex - t->index;
+                int32_t    diff = origIndex - t->index;
                 size_t i;
                 for (i = 0; i < t->index; ++i) {
                     if (t->str[i] != t->str[i + diff])
@@ -197,9 +197,9 @@ long Stream::parseInt() {
 // as above but a given skipChar is ignored
 // this allows format characters (typically commas) in values to be ignored
 long Stream::parseInt(char skipChar) {
-    bool isNegative = false;
-    long value      = 0;
-    int  c;
+    bool    isNegative = false;
+    long    value      = 0;
+    int32_t c;
 
     c = peekNextDigit();
     // ignore non numeric leading characters
@@ -233,11 +233,11 @@ float Stream::parseFloat() {
 // as above but the given skipChar is ignored
 // this allows format characters (typically commas) in values to be ignored
 float Stream::parseFloat(char skipChar) {
-    bool  isNegative = false;
-    bool  isFraction = false;
-    long  value      = 0;
-    int   c;
-    float fraction = 1.0;
+    bool    isNegative = false;
+    bool    isFraction = false;
+    long    value      = 0;
+    int32_t c;
+    float   fraction = 1.0;
 
     c = peekNextDigit();
     // ignore non numeric leading characters
@@ -280,7 +280,7 @@ float Stream::parseFloat(char skipChar) {
 size_t Stream::readBytes(char* buffer, size_t length) {
     size_t count = 0;
     while (count < length) {
-        int c = timedRead();
+        int32_t c = timedRead();
         if (c < 0) {
             break;
         }
@@ -300,7 +300,7 @@ size_t Stream::readBytesUntil(char terminator, char* buffer, size_t length) {
     }
     size_t index = 0;
     while (index < length) {
-        int c = timedRead();
+        int32_t c = timedRead();
         if (c < 0 || c == terminator) {
             break;
         }
@@ -311,8 +311,8 @@ size_t Stream::readBytesUntil(char terminator, char* buffer, size_t length) {
 }
 
 String Stream::readString() {
-    String ret;
-    int    c = timedRead();
+    String  ret;
+    int32_t c = timedRead();
     while (c >= 0) {
         ret += (char)c;
         c = timedRead();
@@ -321,8 +321,8 @@ String Stream::readString() {
 }
 
 String Stream::readStringUntil(char terminator) {
-    String ret;
-    int    c = timedRead();
+    String  ret;
+    int32_t c = timedRead();
     while (c >= 0 && c != terminator) {
         ret += (char)c;
         c = timedRead();

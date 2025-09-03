@@ -170,7 +170,7 @@ namespace Spindles {
             data.msg[5] = ScaledFreq & 0xFF;
         }
 
-        VFDProtocol::response_parser SiemensV20Protocol::initialization_sequence(int index, ModbusCommand& data, VFDSpindle* vfd) {
+        VFDProtocol::response_parser SiemensV20Protocol::initialization_sequence(int32_t index, ModbusCommand& data, VFDSpindle* vfd) {
             if (index != -1) {
                 return nullptr;
             }

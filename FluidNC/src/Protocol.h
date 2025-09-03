@@ -20,7 +20,7 @@
 // memory space we can invest into here or we re-write the g-code parser not to have this
 // buffer.
 
-const int LINE_BUFFER_SIZE = 256;
+const int32_t LINE_BUFFER_SIZE = 256;
 
 void protocol_reset();
 
@@ -130,7 +130,7 @@ void protocol_handle_events();
 void send_alarm(ExecAlarm alarm);
 void send_alarm_from_ISR(ExecAlarm alarm);
 
-inline void protocol_send_event(const Event* evt, int arg) {
+inline void protocol_send_event(const Event* evt, int32_t arg) {
     protocol_send_event(evt, reinterpret_cast<void*>(arg));
 }
 

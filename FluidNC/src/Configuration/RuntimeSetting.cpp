@@ -24,7 +24,7 @@ namespace Configuration {
 
         start_ = setting_;
         // Read fence for config. Shouldn't be necessary, but better safe than sorry.
-        std::atomic_thread_fence(std::memory_order::memory_order_seq_cst);
+        std::atomic_thread_fence(std::memory_order::seq_cst);
     }
 
     std::string RuntimeSetting::setting_prefix() {
@@ -127,7 +127,7 @@ namespace Configuration {
         }
     }
 
-    void RuntimeSetting::item(const char* name, std::string& value, const int minLength, const int maxLength) {
+    void RuntimeSetting::item(const char* name, std::string& value, const int32_t minLength, const int32_t maxLength) {
         if (is(name)) {
             isHandled_ = true;
             if (newValue_.empty()) {
@@ -138,7 +138,7 @@ namespace Configuration {
         }
     }
 
-    void RuntimeSetting::item(const char* name, int& value, const EnumItem* e) {
+    void RuntimeSetting::item(const char* name, int32_t& value, const EnumItem* e) {
         if (is(name)) {
             isHandled_ = true;
             if (newValue_.empty()) {
@@ -151,7 +151,7 @@ namespace Configuration {
 
             } else {
                 if (isdigit(newValue_.front())) {  // if the first char is a number. assume it is an index of a webui enum list
-                    int indexVal = 0;
+                    int32_t indexVal = 0;
                     string_util::from_decimal(newValue_, indexVal);
                     for (auto e2 = e; e2->name; ++e2) {
                         if (e2->value == indexVal) {
@@ -195,10 +195,6 @@ namespace Configuration {
                     // The destructor sends the line when msg goes out of scope
                 }
             } else {
-                // It is distasteful to have this code that essentially duplicates
-                // Parser.cpp speedEntryValue(), albeit using std::string instead of
-                // StringRange.  It might be better to have a single std::string version,
-                // then pass it StringRange.str()
                 std::string_view        newStr(newValue_);
                 std::vector<speedEntry> smValue;
                 while (!newStr.empty()) {
@@ -323,6 +319,6 @@ namespace Configuration {
     }
 
     RuntimeSetting::~RuntimeSetting() {
-        std::atomic_thread_fence(std::memory_order::memory_order_seq_cst);  // Write fence for config
+        std::atomic_thread_fence(std::memory_order::seq_cst);  // Write fence for config
     }
 }

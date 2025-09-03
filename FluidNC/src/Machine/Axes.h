@@ -36,13 +36,13 @@ namespace Machine {
 
         static uint32_t _homing_runs;  // Number of Approach/Pulloff cycles
 
-        static inline char axisName(int index) { return index < MAX_N_AXIS ? _names[index] : '?'; }  // returns axis letter
+        static inline char axisName(int32_t index) { return index < MAX_N_AXIS ? _names[index] : '?'; }  // returns axis letter
 
         static inline size_t    motor_bit(size_t axis, size_t motor) { return motor ? axis + 16 : axis; }
         static inline AxisMask  motors_to_axes(MotorMask motors) { return (motors & 0xffff) | (motors >> 16); }
         static inline MotorMask axes_to_motors(AxisMask axes) { return axes | (axes << 16); }
 
-        static int   _numberAxis;
+        static int32_t   _numberAxis;
         static Axis* _axis[MAX_N_AXIS];
 
         // Some small helpers to find the axis index and axis motor number for a given motor. This
@@ -53,10 +53,10 @@ namespace Machine {
         static MotorMask hardLimitMask();
 
         inline bool hasHardLimits() const {
-            for (int axis = 0; axis < _numberAxis; ++axis) {
+            for (int32_t axis = 0; axis < _numberAxis; ++axis) {
                 auto a = _axis[axis];
 
-                for (int motor = 0; motor < Axis::MAX_MOTORS_PER_AXIS; ++motor) {
+                for (int32_t motor = 0; motor < Axis::MAX_MOTORS_PER_AXIS; ++motor) {
                     auto m = a->_motors[motor];
                     if (m && m->_hardLimits) {
                         return true;
@@ -72,7 +72,7 @@ namespace Machine {
         // The return value is a bitmask of axes that can home
         static MotorMask set_homing_mode(AxisMask homing_mask, bool isHoming);
 
-        static void set_disable(int axis, bool disable);
+        static void set_disable(int32_t axis, bool disable);
         static void set_disable(bool disable);
         static void step(uint8_t step_mask, uint8_t dir_mask);
         static void unstep();

@@ -28,8 +28,8 @@
 /* this code needs standard functions memcpy() and memset()
    and input/output functions _inbyte() and _outbyte().
    the prototypes of the input/output functions are:
-     int _inbyte(uint16_t timeout); // msec timeout
-     void _outbyte(int c);
+     int32_t _inbyte(uint16_t timeout); // msec timeout
+     void _outbyte(int32_t c);
  */
 
 #include "xmodem.h"
@@ -37,12 +37,12 @@
 static Channel* serialPort;
 static Print*   file;
 
-static int _inbyte(uint16_t timeout) {
+static int32_t _inbyte(uint16_t timeout) {
     uint8_t data;
     auto    res = serialPort->timedReadBytes(&data, 1, timeout);
     return res != 1 ? -1 : data;
 }
-static void _outbyte(int c) {
+static void _outbyte(int32_t c) {
     serialPort->write((uint8_t)c);
 }
 static void _outbytes(uint8_t* buf, size_t len) {
@@ -71,7 +71,7 @@ static const uint16_t crc16tab[256] = {
 };
 
 uint16_t crc16_ccitt(const uint8_t* buf, size_t len) {
-    int      counter;
+    int32_t      counter;
     uint16_t crc = 0;
     for (counter = 0; counter < len; counter++)
         crc = (crc << 8) ^ crc16tab[((crc >> 8) ^ *buf++) & 0x00FF];
@@ -90,14 +90,14 @@ uint16_t crc16_ccitt(const uint8_t* buf, size_t len) {
 #define MAXRETRANS 25
 #define TRANSMIT_XMODEM_1K
 
-static int check(int crc, const uint8_t* buf, int sz) {
+static int32_t check(int32_t crc, const uint8_t* buf, int32_t sz) {
     if (crc) {
         uint16_t crc  = crc16_ccitt(buf, sz);
         uint16_t tcrc = (buf[sz] << 8) + buf[sz + 1];
         if (crc == tcrc)
             return 1;
     } else {
-        int     i;
+        int32_t     i;
         uint8_t cks = 0;
         for (i = 0; i < sz; ++i) {
             cks += buf[i];
@@ -157,11 +157,11 @@ int xmodemReceive(Channel* serial, FileStream* out) {
 
     uint8_t  xbuff[1030]; /* 1024 for XModem 1k + 3 head chars + 2 crc + nul */
     uint8_t* p;
-    int      bufsz = 0, crc = 0;
+    int32_t      bufsz = 0, crc = 0;
     uint8_t  trychar  = 'C';
     uint8_t  packetno = 1;
-    int      i, c           = 0;
-    int      retry, retrans = MAXRETRANS;
+    int32_t      i, c           = 0;
+    int32_t      retry, retrans = MAXRETRANS;
 
     size_t len = 0;
 
@@ -242,11 +242,11 @@ int xmodemTransmit(Channel* serial, FileStream* infile) {
     serialPort = serial;
 
     uint8_t xbuff[1030]; /* 1024 for XModem 1k + 3 head chars + 2 crc + nul */
-    int     bufsz, crc = -1;
+    int32_t     bufsz, crc = -1;
     uint8_t packetno = 1;
-    int     i, c = 0;
+    int32_t     i, c = 0;
     size_t  len = 0;
-    int     retry;
+    int32_t     retry;
 
     for (;;) {
         for (retry = 0; retry < 16; ++retry) {
@@ -346,7 +346,7 @@ int xmodemTransmit(Channel* serial, FileStream* infile) {
 
 #ifdef TEST_XMODEM_RECEIVE
 int main(void) {
-    int st;
+    int32_t st;
 
     printf("Send data using the xmodem protocol from your terminal emulator now...\n");
     /* the following should be changed for your environment:
@@ -365,7 +365,7 @@ int main(void) {
 #endif
 #ifdef TEST_XMODEM_SEND
 int main(void) {
-    int st;
+    int32_t st;
 
     printf("Prepare your terminal emulator to receive data now...\n");
     /* the following should be changed for your environment:

@@ -114,7 +114,7 @@ void OLED::show_limits(bool probe, const bool* limits) {
     }
 }
 void OLED::show_file() {
-    int pct = int(_percent);
+    int32_t pct = int(_percent);
     if (_filename.length() == 0) {
         return;
     }
@@ -196,7 +196,7 @@ void OLED::show_radio_info() {
     }
 }
 
-void OLED::parse_numbers(std::string s, float* nums, int maxnums) {
+void OLED::parse_numbers(std::string s, float* nums, int32_t maxnums) {
     size_t pos     = 0;
     size_t nextpos = -1;
     size_t i       = 0;
@@ -323,9 +323,9 @@ void OLED::parse_status_report() {
         }
         if (tag == "A") {
             // SCFM
-            int  spindle = 0;
-            bool flood   = false;
-            bool mist    = false;
+            int32_t spindle = 0;
+            bool    flood   = false;
+            bool    mist    = false;
             for (char const& c : value) {
                 switch (c) {
                     case 'S':
@@ -527,7 +527,7 @@ struct xfont_t {
 };
 size_t OLED::char_width(char c, font_t font) {
     xfont_t* xf    = (xfont_t*)font;
-    int      index = c - xf->first;
+    int32_t  index = c - xf->first;
     return (index < 0) ? 0 : xf->glyphs[index].width;
 }
 

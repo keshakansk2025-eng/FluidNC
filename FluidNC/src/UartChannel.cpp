@@ -5,7 +5,7 @@
 #include "Machine/MachineConfig.h"  // config
 #include "Serial.h"                 // allChannels
 
-UartChannel::UartChannel(int num, bool addCR) : Channel("uart_channel", num, addCR) {
+UartChannel::UartChannel(int32_t num, bool addCR) : Channel("uart_channel", num, addCR) {
     _lineedit = new Lineedit(this, _line, Channel::maxLine - 1);
     _active   = false;
 }
@@ -65,8 +65,8 @@ size_t UartChannel::write(const uint8_t* buffer, size_t length) {
         char   lastchar = '\0';
         size_t j        = 0;
         while (rem) {
-            const int bufsize = 80;
-            uint8_t   modbuf[bufsize];
+            const int32_t bufsize = 80;
+            uint8_t       modbuf[bufsize];
             // bufsize-1 in case the last character is \n
             size_t k = 0;
             while (rem && k < (bufsize - 1)) {
@@ -94,7 +94,7 @@ int UartChannel::peek() {
     return _uart->peek();
 }
 
-int UartChannel::rx_buffer_available() {
+int32_t UartChannel::rx_buffer_available() {
     return _uart->rx_buffer_available();
 }
 
@@ -114,7 +114,7 @@ bool UartChannel::lineComplete(char* line, char c) {
 }
 
 int UartChannel::read() {
-    int c = _uart->read();
+    int32_t c = _uart->read();
     if (c == 0x11) {
         // 0x11 is XON.  If we receive that, it is a request to use software flow control
         _uart->setSwFlowControl(true, -1, -1);
@@ -138,7 +138,7 @@ size_t UartChannel::timedReadBytes(char* buffer, size_t length, TickType_t timeo
         _queue.pop();
     }
 
-    int res = _uart->timedReadBytes(buffer, remlen, timeout);
+    int32_t res = _uart->timedReadBytes(buffer, remlen, timeout);
     // If res < 0, no bytes were read
     remlen -= (res < 0) ? 0 : res;
     return length - remlen;
@@ -156,10 +156,10 @@ void UartChannel::registerEvent(uint8_t pinnum, InputPin* obj) {
     _uart->registerInputPin(pinnum, obj);
 }
 
-bool UartChannel::setAttr(int index, bool* value, const std::string& attrString) {
+bool UartChannel::setAttr(int32_t index, bool* value, const std::string& attrString) {
     out(attrString, "EXP:");
     _ackwait = 1;
-    for (int i = 0; i < 20; i++) {
+    for (int32_t i = 0; i < 20; i++) {
         pollLine(nullptr);
         if (_ackwait < 1) {
             return _ackwait == 0;
@@ -169,4 +169,10 @@ bool UartChannel::setAttr(int index, bool* value, const std::string& attrString)
     _ackwait = 0;
     log_error("IO Expander is unresponsive");
     return false;
+}
+
+void UartChannel::group(Configuration::HandlerBase& handler) {
+    handler.item("report_interval_ms", _report_interval_ms);
+    handler.item("uart_num", _uart_num);
+    handler.item("message_level", _message_level, messageLevels2);
 }

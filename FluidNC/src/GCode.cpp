@@ -83,7 +83,7 @@ void gc_sync_position() {
 static bool decode_format_string(const char* comment, size_t& index, size_t len, const char*& format) {
     // comment[index] is '%'
     const char* f   = comment + index;
-    int         rem = len - index;
+    int32_t     rem = len - index;
     if (rem > 1 && f[1] == 'd') {
         ++index;
         format = "%.0f";

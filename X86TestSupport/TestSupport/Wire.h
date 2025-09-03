@@ -37,10 +37,10 @@ public:
     // TwoWire interface:
 
     // call setPins() first, so that begin() can be called without arguments from libraries
-    bool setPins(int sda, int scl);
+    bool setPins(int32_t sda, int32_t scl);
 
-    bool begin(int sda = -1, int scl = -1, uint32_t frequency = 0);  // returns true, if successful init of i2c bus
-    bool begin(uint8_t slaveAddr, int sda = -1, int scl = -1, uint32_t frequency = 0);
+    bool begin(int32_t sda = -1, int32_t scl = -1, uint32_t frequency = 0);  // returns true, if successful init of i2c bus
+    bool begin(uint8_t slaveAddr, int32_t sda = -1, int32_t scl = -1, uint32_t frequency = 0);
     bool end();
 
     void     setTimeOut(uint16_t timeOutMillis);  // default timeout of i2c transactions is 50ms
@@ -51,7 +51,7 @@ public:
 
     void beginTransmission(uint16_t address);
     void beginTransmission(uint8_t address);
-    void beginTransmission(int address);
+    void beginTransmission(int32_t address);
 
     uint8_t endTransmission(bool sendStop);
     uint8_t endTransmission(void);
@@ -63,21 +63,21 @@ public:
     uint8_t requestFrom(uint16_t address, uint8_t size);
     uint8_t requestFrom(uint8_t address, uint8_t size, uint8_t sendStop);
     uint8_t requestFrom(uint8_t address, uint8_t size);
-    uint8_t requestFrom(int address, int size, int sendStop);
-    uint8_t requestFrom(int address, int size);
+    uint8_t requestFrom(int32_t address, int32_t size, int32_t sendStop);
+    uint8_t requestFrom(int32_t address, int32_t size);
 
     size_t write(uint8_t ch);
     size_t write(const uint8_t* buf, size_t size);
-    int    available(void);
-    int    read(void);
-    int    peek(void);
+    int32_t    available(void);
+    int32_t    read(void);
+    int32_t    peek(void);
     void   flush(void);
 
     inline size_t write(const char* s) { return write((uint8_t*)s, strlen(s)); }
     inline size_t write(unsigned long n) { return write((uint8_t)n); }
     inline size_t write(long n) { return write((uint8_t)n); }
-    inline size_t write(unsigned int n) { return write((uint8_t)n); }
-    inline size_t write(int n) { return write((uint8_t)n); }
+    inline size_t write(unsigned int32_t n) { return write((uint8_t)n); }
+    inline size_t write(int32_t n) { return write((uint8_t)n); }
 };
 
 extern TwoWire Wire;

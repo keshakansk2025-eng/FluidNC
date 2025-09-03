@@ -15,7 +15,7 @@ namespace Pins {
     // the top of the list. Note that this list must match the list
     // in attributes _exactly_!
 
-    const int       START_LINE = __LINE__ + 1;
+    const int32_t   START_LINE = __LINE__ + 1;
     PinCapabilities PinCapabilities::Input(1 << (__LINE__ - START_LINE));     // NOTE: Mapped in PinAttributes!
     PinCapabilities PinCapabilities::Output(1 << (__LINE__ - START_LINE));    // NOTE: Mapped in PinAttributes!
     PinCapabilities PinCapabilities::PullUp(1 << (__LINE__ - START_LINE));    // NOTE: Mapped in PinAttributes!

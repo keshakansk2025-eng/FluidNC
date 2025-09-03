@@ -18,7 +18,7 @@ enum class DwellMode : uint8_t {
 
 const float SOME_LARGE_VALUE = 1.0E+38f;
 
-static inline int toMotor2(int axis) {
+static inline int32_t toMotor2(int32_t axis) {
     return axis + MAX_N_AXIS;
 }
 

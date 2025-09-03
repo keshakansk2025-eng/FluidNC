@@ -42,9 +42,9 @@ namespace fs {
 
         size_t write(uint8_t) override;
         size_t write(const uint8_t* buf, size_t size) override;
-        int    available() override;
-        int    read() override;
-        int    peek() override;
+        int32_t    available() override;
+        int32_t    read() override;
+        int32_t    peek() override;
         void   flush() override;
         size_t read(uint8_t* buf, size_t size);
         size_t readBytes(char* buffer, size_t length) { return read((uint8_t*)buffer, length); }

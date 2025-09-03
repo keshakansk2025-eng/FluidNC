@@ -60,7 +60,7 @@ namespace Spindles {
             void direction_command(SpindleState mode, ModbusCommand& data) override;
             void set_speed_command(uint32_t rpm, ModbusCommand& data) override;
 
-            response_parser initialization_sequence(int index, ModbusCommand& data, VFDSpindle* vfd)
+            response_parser initialization_sequence(int32_t index, ModbusCommand& data, VFDSpindle* vfd)
             {
                 // This is a bug in the original implementation. Index changes, so we must handle that.
                 if (index == -1) {

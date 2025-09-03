@@ -32,7 +32,7 @@ namespace MotorDrivers {
     public:
         MotorDriver(const char* name) : _name(name) {}
 
-        static constexpr int      max_n_axis = MAX_N_AXIS;
+        static constexpr int32_t      max_n_axis = MAX_N_AXIS;
         static constexpr uint32_t axis_mask  = (1 << max_n_axis) - 1;
 
         // init() establishes configured motor parameters.  It is called after

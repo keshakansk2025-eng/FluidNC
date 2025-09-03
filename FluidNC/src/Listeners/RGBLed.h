@@ -9,10 +9,10 @@ namespace Listeners {
     class RGBLed : public SysListener {
         Adafruit_NeoPixel* pixels_ = nullptr;
 
-        Pin pin_;
-        int index_ = 0;
+        Pin     pin_;
+        int32_t index_ = 0;
 
-        std::string getColor(int value) {
+        std::string getColor(int32_t value) {
             if (value == -1) {
                 return "none";
             } else {
@@ -22,7 +22,7 @@ namespace Listeners {
             }
         }
 
-        int parseColor(const std::string& value, int deft) {
+        int32_t parseColor(const std::string& value, int32_t deft) {
             if (value == "none") {  // no change
                 return -1;
             }
@@ -32,10 +32,10 @@ namespace Listeners {
                 return deft;
             }
 
-            int v = 0;
-            for (int i = 0; i < 3; ++i) {
-                int x = 0;
-                for (int j = 0; j < 2; ++j) {
+            int32_t v = 0;
+            for (int32_t i = 0; i < 3; ++i) {
+                int32_t x = 0;
+                for (int32_t j = 0; j < 2; ++j) {
                     char c = value[i * 2 + j];
                     if (c >= '0' && c <= '9') {
                         x = x * 16 + c - '0';
@@ -59,16 +59,16 @@ namespace Listeners {
             static_cast<RGBLed*>(userData)->handleChangeDetail(changes, state);
         }
 
-        int idle        = 0x007F00;
-        int alarm       = 0x7F0000;
-        int checkMode   = 0xb936bf;
-        int homing      = 0x501f00;
-        int cycle       = 0x7f4422;
-        int hold        = 0x777744;
-        int jog         = 0x007f3f;
-        int safetyDoor  = 0x3f7f00;
-        int sleep       = 0x001F00;
-        int configAlarm = 0x7f0000;
+        int32_t idle        = 0x007F00;
+        int32_t alarm       = 0x7F0000;
+        int32_t checkMode   = 0xb936bf;
+        int32_t homing      = 0x501f00;
+        int32_t cycle       = 0x7f4422;
+        int32_t hold        = 0x777744;
+        int32_t jog         = 0x007f3f;
+        int32_t safetyDoor  = 0x3f7f00;
+        int32_t sleep       = 0x001F00;
+        int32_t configAlarm = 0x7f0000;
 
         void handleRGBString(Configuration::HandlerBase& handler, const char* name, int& value) {
             auto        old = value;

@@ -109,17 +109,17 @@ namespace WebUI {
     static const char* NULL_IP = "0.0.0.0";
 
     //boundaries
-    static constexpr int MAX_SSID_LENGTH     = 32;
-    static constexpr int MIN_SSID_LENGTH     = 0;  // Allow null SSIDs as a way to disable
-    static constexpr int MAX_PASSWORD_LENGTH = 64;
+    static constexpr int32_t MAX_SSID_LENGTH     = 32;
+    static constexpr int32_t MIN_SSID_LENGTH     = 0;  // Allow null SSIDs as a way to disable
+    static constexpr int32_t MAX_PASSWORD_LENGTH = 64;
     //min size of password is 0 or upper than 8 char
     //so let set min is 8
-    static constexpr int MIN_PASSWORD_LENGTH = 8;
-    static constexpr int MAX_HOSTNAME_LENGTH = 32;
-    static constexpr int MIN_HOSTNAME_LENGTH = 1;
+    static constexpr int32_t MIN_PASSWORD_LENGTH = 8;
+    static constexpr int32_t MAX_HOSTNAME_LENGTH = 32;
+    static constexpr int32_t MIN_HOSTNAME_LENGTH = 1;
 
-    static constexpr int DHCP_MODE   = 0;
-    static constexpr int STATIC_MODE = 1;
+    static constexpr int32_t DHCP_MODE   = 0;
+    static constexpr int32_t STATIC_MODE = 1;
 
     static const enum_opt_t staModeOptions = {
         { "DHCP", DHCP_MODE },
@@ -212,7 +212,7 @@ namespace WebUI {
 
         void wifi_stats(JSONencoder& j) {
             j.id_value_object("Sleep mode", WiFi.getSleep() ? "Modem" : "None");
-            int mode = WiFi.getMode();
+            int32_t mode = WiFi.getMode();
             if (mode != WIFI_OFF) {
                 //Is OTA available ?
                 size_t flashsize = 0;
@@ -323,7 +323,7 @@ namespace WebUI {
                     tcpip_adapter_get_sta_list(&station, &tcpip_sta_list);
                     j.id_value_object("Connected channels", station.num);
 
-                    for (int i = 0; i < station.num; i++) {
+                    for (int32_t i = 0; i < station.num; i++) {
                         j.id_value_object("",
                                           std::string("") + mac2str(tcpip_sta_list.sta[i].mac) + " " +
                                               IP_string(IPAddress(tcpip_sta_list.sta[i].ip.addr)));
@@ -343,7 +343,7 @@ namespace WebUI {
 
         void status_report(Channel& out) {
             log_stream(out, "Sleep mode: " << (WiFi.getSleep() ? "Modem" : "None"));
-            int mode = WiFi.getMode();
+            int32_t mode = WiFi.getMode();
             if (mode != WIFI_OFF) {
                 //Is OTA available ?
                 size_t flashsize = 0;
@@ -452,7 +452,7 @@ namespace WebUI {
                     tcpip_adapter_get_sta_list(&station, &tcpip_sta_list);
                     log_stream(out, "Connected channels: " << station.num);
 
-                    for (int i = 0; i < station.num; i++) {
+                    for (int32_t i = 0; i < station.num; i++) {
                         log_stream(out, mac2str(tcpip_sta_list.sta[i].mac) << " " << IP_string(IPAddress(tcpip_sta_list.sta[i].ip.addr)));
                     }
                     print_mac(out, "Disabled Mode: STA", WiFi.macAddress().c_str());
@@ -888,7 +888,7 @@ namespace WebUI {
 
             // An initial async scanNetworks was issued at startup, so there
             // is a good chance that scan information is already available.
-            int n;
+            int32_t n;
             while (true) {
                 n = WiFi.scanComplete();
                 if (n >= 0) {  // Scan completed with n results
@@ -902,7 +902,7 @@ namespace WebUI {
                 delay(1000);
             }
 
-            for (int i = 0; i < n; ++i) {
+            for (int32_t i = 0; i < n; ++i) {
                 j.begin_object();
                 j.member("SSID", WiFi.SSID(i).c_str());
                 j.member("SIGNAL", getSignal(WiFi.RSSI(i)));

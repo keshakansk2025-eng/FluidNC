@@ -47,7 +47,7 @@ namespace std _GLIBCXX_VISIBILITY(default) {
                 if (dirp)
                     ec.clear();
                 else {
-                    const int err = errno;
+                    const int32_t err = errno;
                     if (err == EACCES && skip_permission_denied)
                         ec.clear();
                     else
@@ -62,7 +62,7 @@ namespace std _GLIBCXX_VISIBILITY(default) {
             }
             const struct ::dirent* advance(bool skip_permission_denied, error_code& ec) noexcept {
                 ec.clear();
-                int                    err  = std::exchange(errno, 0);
+                int32_t                    err  = std::exchange(errno, 0);
                 const struct ::dirent* entp = readdir(dirp);
                 // std::swap cannot be used with Bionic's errno
                 err = std::exchange(errno, err);

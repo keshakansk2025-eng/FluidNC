@@ -21,7 +21,7 @@
 extern "C" {
 #endif
 
-typedef int esp_err_t;
+typedef int32_t esp_err_t;
 
 /* Definitions for error constants. */
 #define ESP_OK 0    /*!< esp_err_t value indicating success (no error) */
@@ -79,10 +79,10 @@ const char* esp_err_to_name(esp_err_t code);
 const char* esp_err_to_name_r(esp_err_t code, char* buf, size_t buflen);
 
 /** @cond */
-void _esp_error_check_failed(esp_err_t rc, const char* file, int line, const char* function, const char* expression);
+void _esp_error_check_failed(esp_err_t rc, const char* file, int32_t line, const char* function, const char* expression);
 
 /** @cond */
-void _esp_error_check_failed_without_abort(esp_err_t rc, const char* file, int line, const char* function, const char* expression);
+void _esp_error_check_failed_without_abort(esp_err_t rc, const char* file, int32_t line, const char* function, const char* expression);
 
 #ifndef __ASSERT_FUNC
 /* This won't happen on IDF, which defines __ASSERT_FUNC in assert.h, but it does happen when building on the host which

@@ -10,13 +10,8 @@
 
 std::string IP_string(uint32_t ipaddr);
 
-inline Print& operator<<(Print& lhs, char c) {
-    lhs.print(c);
-    return lhs;
-}
-
-inline Print& operator<<(Print& lhs, const char* v) {
-    lhs.print(v);
+inline Print& operator<<(Print& lhs, const char8_t* v) {
+    lhs.print(reinterpret_cast<const char*>(v));
     return lhs;
 }
 
@@ -30,18 +25,9 @@ inline Print& operator<<(Print& lhs, const std::string& v) {
     return lhs;
 }
 
-inline Print& operator<<(Print& lhs, int v) {
-    lhs.print(v);
-    return lhs;
-}
-
-inline Print& operator<<(Print& lhs, unsigned int v) {
-    lhs.print(v);
-    return lhs;
-}
-
-inline Print& operator<<(Print& lhs, uint64_t v) {
-    lhs.print(v);
+inline Print& operator<<(Print& lhs, const std::u8string& v) {
+    std::string normal_str(v.begin(), v.end());
+    lhs.print(normal_str.c_str());
     return lhs;
 }
 
@@ -60,11 +46,18 @@ inline Print& operator<<(Print& lhs, IPAddress v) {
     return lhs;
 }
 
+// Handle most integer types
+template <typename T>
+Print& operator<<(Print& lhs, T v) {
+    lhs.print(v);
+    return lhs;
+}
+
 class setprecision {
-    int precision;
+    int32_t precision;
 
 public:
-    explicit setprecision(int p) : precision(p) {}
+    explicit setprecision(int32_t p) : precision(p) {}
 
     inline void Write(Print& stream, float f) const { stream.print(f, precision); }
     inline void Write(Print& stream, double d) const { stream.print(d, precision); }

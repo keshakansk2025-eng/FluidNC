@@ -25,21 +25,21 @@ Some features should not be changed. See notes below.
 // machine.h is #included below, after some definitions
 // that the machine file might choose to undefine.
 
-const int MAX_N_AXIS = 6;
+const int32_t MAX_N_AXIS = 6;
 
-const int MAX_MESSAGE_LINE = 256;
+const int32_t MAX_MESSAGE_LINE = 256;
 
 // Axis array index values. Must start with 0 and be continuous.
 // Note: You set the number of axes used by changing MAX_N_AXIS.
 // Be sure to define pins or servos in the machine definition file.
-const int X_AXIS = 0;  // Axis indexing value.
-const int Y_AXIS = 1;
-const int Z_AXIS = 2;
-const int A_AXIS = 3;
-const int B_AXIS = 4;
-const int C_AXIS = 5;
+const int32_t X_AXIS = 0;  // Axis indexing value.
+const int32_t Y_AXIS = 1;
+const int32_t Z_AXIS = 2;
+const int32_t A_AXIS = 3;
+const int32_t B_AXIS = 4;
+const int32_t C_AXIS = 5;
 
-const int SUPPORT_TASK_CORE = 0;  // Reference: CONFIG_ARDUINO_RUNNING_CORE = 1
+const int32_t SUPPORT_TASK_CORE = 0;  // Reference: CONFIG_ARDUINO_RUNNING_CORE = 1
 
 //Connect to your local AP with these credentials
 //#define CONNECT_TO_SSID  "your SSID"
@@ -81,25 +81,25 @@ const bool FORCE_INITIALIZATION_ALARM = false;  // Default disabled. Uncomment t
 // allowable override values and the coarse and fine increments per command received. Please
 // note the allowable values in the descriptions following each define.
 namespace FeedOverride {
-    const int Default         = 100;  // 100%. Don't change this value.
-    const int Max             = 200;  // Percent of programmed feed rate (100-255). Usually 120% or 200%
-    const int Min             = 10;   // Percent of programmed feed rate (1-100). Usually 50% or 1%
-    const int CoarseIncrement = 10;   // (1-99). Usually 10%.
-    const int FineIncrement   = 1;    // (1-99). Usually 1%.
+    const int32_t Default         = 100;  // 100%. Don't change this value.
+    const int32_t Max             = 200;  // Percent of programmed feed rate (100-255). Usually 120% or 200%
+    const int32_t Min             = 10;   // Percent of programmed feed rate (1-100). Usually 50% or 1%
+    const int32_t CoarseIncrement = 10;   // (1-99). Usually 10%.
+    const int32_t FineIncrement   = 1;    // (1-99). Usually 1%.
 };
 namespace RapidOverride {
-    const int Default  = 100;  // 100%. Don't change this value.
-    const int Medium   = 50;   // Percent of rapid (1-99). Usually 50%.
-    const int Low      = 25;   // Percent of rapid (1-99). Usually 25%.
-    const int ExtraLow = 5;    // Percent of rapid (1-99). Usually 5%.  Not Supported
+    const int32_t Default  = 100;  // 100%. Don't change this value.
+    const int32_t Medium   = 50;   // Percent of rapid (1-99). Usually 50%.
+    const int32_t Low      = 25;   // Percent of rapid (1-99). Usually 25%.
+    const int32_t ExtraLow = 5;    // Percent of rapid (1-99). Usually 5%.  Not Supported
 };
 
 namespace SpindleSpeedOverride {
-    const int Default         = 100;  // 100%. Don't change this value.
-    const int Max             = 200;  // Percent of programmed spindle speed (100-255). Usually 200%.
-    const int Min             = 10;   // Percent of programmed spindle speed (1-100). Usually 10%.
-    const int CoarseIncrement = 10;   // (1-99). Usually 10%.
-    const int FineIncrement   = 1;    // (1-99). Usually 1%.
+    const int32_t Default         = 100;  // 100%. Don't change this value.
+    const int32_t Max             = 200;  // Percent of programmed spindle speed (100-255). Usually 200%.
+    const int32_t Min             = 10;   // Percent of programmed spindle speed (1-100). Usually 10%.
+    const int32_t CoarseIncrement = 10;   // (1-99). Usually 10%.
+    const int32_t FineIncrement   = 1;    // (1-99). Usually 1%.
 };
 
 // When a M2 or M30 program end command is executed, most GCode states are restored to their defaults.
@@ -116,10 +116,10 @@ const bool RESTORE_OVERRIDES_AFTER_PROGRAM_END = true;  // Default enabled. Comm
 // With a good GUI, this data doesn't need to be refreshed very often, on the order of a several seconds.
 // NOTE: WCO refresh must be 2 or greater. OVR refresh must be 1 or greater.
 
-const int REPORT_OVR_REFRESH_BUSY_COUNT = 20;  // (1-255)
-const int REPORT_OVR_REFRESH_IDLE_COUNT = 10;  // (1-255) Must be less than or equal to the busy count
-const int REPORT_WCO_REFRESH_BUSY_COUNT = 30;  // (2-255)
-const int REPORT_WCO_REFRESH_IDLE_COUNT = 10;  // (2-255) Must be less than or equal to the busy count
+const int32_t REPORT_OVR_REFRESH_BUSY_COUNT = 20;  // (1-255)
+const int32_t REPORT_OVR_REFRESH_IDLE_COUNT = 10;  // (1-255) Must be less than or equal to the busy count
+const int32_t REPORT_WCO_REFRESH_BUSY_COUNT = 30;  // (2-255)
+const int32_t REPORT_WCO_REFRESH_IDLE_COUNT = 10;  // (2-255) Must be less than or equal to the busy count
 
 // The temporal resolution of the acceleration management subsystem. A higher number gives smoother
 // acceleration, particularly noticeable on machines that run at very high feedrates, but may negatively
@@ -128,12 +128,12 @@ const int REPORT_WCO_REFRESH_IDLE_COUNT = 10;  // (2-255) Must be less than or e
 // NOTE: Changing this value also changes the execution time of a segment in the step segment buffer.
 // When increasing this value, this stores less overall time in the segment buffer and vice versa. Make
 // certain the step segment buffer is increased/decreased to account for these changes.
-const int ACCELERATION_TICKS_PER_SECOND = 100;
+const int32_t ACCELERATION_TICKS_PER_SECOND = 100;
 
 // Sets which axis the tool length offset is applied. Assumes the spindle is always parallel with
 // the selected axis with the tool oriented toward the negative direction. In other words, a positive
 // tool length offset value is subtracted from the current location.
-const int TOOL_LENGTH_OFFSET_AXIS = Z_AXIS;  // Default z-axis. Valid values are X_AXIS, Y_AXIS, or Z_AXIS.
+const int32_t TOOL_LENGTH_OFFSET_AXIS = Z_AXIS;  // Default z-axis. Valid values are X_AXIS, Y_AXIS, or Z_AXIS.
 
 // Minimum planner junction speed. Sets the default minimum junction speed the planner plans to at
 // every buffer block junction, except for starting from rest and end of the buffer, which are always
@@ -153,7 +153,7 @@ const double MINIMUM_FEED_RATE = 1.0;  // (mm/min)
 // correction with expensive sin() and cos() calcualtions. This parameter maybe decreased if there
 // are issues with the accuracy of the arc generations, or increased if arc execution is getting
 // bogged down by too many trig calculations.
-const int N_ARC_CORRECTION = 12;  // Integer (1-255)
+const int32_t N_ARC_CORRECTION = 12;  // Integer (1-255)
 
 // The arc G2/3 GCode standard is problematic by definition. Radius-based arcs have horrible numerical
 // errors when arc at semi-circles(pi) or full-circles(2*pi). Offset-based arcs are much more accurate

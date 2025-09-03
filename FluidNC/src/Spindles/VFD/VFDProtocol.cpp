@@ -9,8 +9,8 @@
 
 namespace Spindles {
     namespace VFD {
-        const int        VFD_RS485_BUF_SIZE = 127;
-        const int        RESPONSE_WAIT_MS   = 1000;                                   // how long to wait for a response
+        const int32_t        VFD_RS485_BUF_SIZE = 127;
+        const int32_t        RESPONSE_WAIT_MS   = 1000;                                   // how long to wait for a response
         const TickType_t response_ticks     = RESPONSE_WAIT_MS / portTICK_PERIOD_MS;  // in milliseconds between commands
 
         QueueHandle_t VFDProtocol::vfd_cmd_queue     = nullptr;
@@ -40,7 +40,7 @@ namespace Spindles {
         // The communications task
         void VFDProtocol::vfd_cmd_task(void* pvParameters) {
             static bool unresponsive = false;  // to pop off a message once each time it becomes unresponsive
-            static int  pollidx      = -1;
+            static int32_t  pollidx      = -1;
 
             VFDSpindle*   instance = static_cast<VFDSpindle*>(pvParameters);
             auto          impl     = instance->detail_;
@@ -50,7 +50,7 @@ namespace Spindles {
             bool          safetyPollingEnabled = impl->safety_polling();
 
             for (; true; delay_ms(instance->_poll_ms)) {
-                std::atomic_thread_fence(std::memory_order::memory_order_seq_cst);  // read fence for settings
+                std::atomic_thread_fence(std::memory_order::seq_cst);  // read fence for settings
                 response_parser parser = nullptr;
 
                 // First check if we should ask the VFD for the speed parameters as part of the initialization.
@@ -144,7 +144,7 @@ namespace Spindles {
                 }
 
                 // Assume for the worst, and retry...
-                int retry_count = 0;
+                int32_t retry_count = 0;
                 for (; retry_count < instance->_retries; ++retry_count) {
                     // Flush the UART and write the data:
                     uart.flush();
@@ -265,12 +265,12 @@ namespace Spindles {
         // It then added the CRC to those last 2 bytes
         // full_msg_len This is the length of the message including the 2 crc bytes
         // Source: https://ctlsys.com/support/how_to_compute_the_modbus_rtu_message_crc/
-        uint16_t VFDProtocol::ModRTU_CRC(uint8_t* buf, int msg_len) {
+        uint16_t VFDProtocol::ModRTU_CRC(uint8_t* buf, int32_t msg_len) {
             uint16_t crc = 0xFFFF;
-            for (int pos = 0; pos < msg_len; pos++) {
+            for (int32_t pos = 0; pos < msg_len; pos++) {
                 crc ^= uint16_t(buf[pos]);  // XOR byte into least sig. byte of crc.
 
-                for (int i = 8; i != 0; i--) {  // Loop over each bit
+                for (int32_t i = 8; i != 0; i--) {  // Loop over each bit
                     if ((crc & 0x0001) != 0) {  // If the LSB is set
                         crc >>= 1;              // Shift right and XOR 0xA001
                         crc ^= 0xA001;

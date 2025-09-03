@@ -10,7 +10,7 @@ int64_t esp_timer_get_time() {
     return Capture::instance().current();
 }
 
-void attachInterrupt(uint8_t pin, void (*callback)(void), int mode) {
+void attachInterrupt(uint8_t pin, void (*callback)(void), int32_t mode) {
     attachInterruptArg(
         pin,
         [](void* arg) {
@@ -21,7 +21,7 @@ void attachInterrupt(uint8_t pin, void (*callback)(void), int mode) {
         mode);
 }
 
-void attachInterruptArg(uint8_t pin, void (*callback)(void*, bool), void* arg, int mode) {
+void attachInterruptArg(uint8_t pin, void (*callback)(void*, bool), void* arg, int32_t mode) {
     SoftwareGPIO::instance().attachISR(pin, callback, arg, mode);
 }
 
@@ -29,7 +29,7 @@ void detachInterrupt(uint8_t pin) {
     SoftwareGPIO::instance().detachISR(pin);
 }
 
-extern "C" int __digitalRead(uint8_t pin) {
+extern "C" int32_t __digitalRead(uint8_t pin) {
     auto& io = SoftwareGPIO::instance();
     return io.read(pin);
 }
@@ -44,7 +44,7 @@ extern "C" void __digitalWrite(uint8_t pin, uint8_t val) {
     return io.writeOutput(pin, val ? true : false);
 }
 
-void delay(int ms) {
+void delay(int32_t ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 

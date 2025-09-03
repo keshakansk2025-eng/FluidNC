@@ -21,31 +21,31 @@
 #include <base64.h>
 
 namespace WebUI {
-    static const int PUSHOVER_NOTIFICATION = 1;
-    static const int EMAIL_NOTIFICATION    = 2;
-    static const int LINE_NOTIFICATION     = 3;
-    static const int TELEGRAM_NOTIFICATION = 4;
+    static const int32_t PUSHOVER_NOTIFICATION = 1;
+    static const int32_t EMAIL_NOTIFICATION    = 2;
+    static const int32_t LINE_NOTIFICATION     = 3;
+    static const int32_t TELEGRAM_NOTIFICATION = 4;
 
-    static const int DEFAULT_NOTIFICATION_TYPE       = 0;
-    static const int MIN_NOTIFICATION_TOKEN_LENGTH   = 0;
-    static const int MAX_NOTIFICATION_TOKEN_LENGTH   = 63;
-    static const int MAX_NOTIFICATION_SETTING_LENGTH = 127;
+    static const int32_t DEFAULT_NOTIFICATION_TYPE       = 0;
+    static const int32_t MIN_NOTIFICATION_TOKEN_LENGTH   = 0;
+    static const int32_t MAX_NOTIFICATION_TOKEN_LENGTH   = 63;
+    static const int32_t MAX_NOTIFICATION_SETTING_LENGTH = 127;
 
     static const char* DEFAULT_TOKEN = "";
 
-    static const int   PUSHOVERTIMEOUT = 5000;
+    static const int32_t   PUSHOVERTIMEOUT = 5000;
     static const char* PUSHOVERSERVER  = "api.pushover.net";
-    static const int   PUSHOVERPORT    = 443;
+    static const int32_t   PUSHOVERPORT    = 443;
 
-    static const int   LINETIMEOUT = 5000;
+    static const int32_t   LINETIMEOUT = 5000;
     static const char* LINESERVER  = "notify-api.line.me";
-    static const int   LINEPORT    = 443;
+    static const int32_t   LINEPORT    = 443;
 
-    static const int   TELEGRAMTIMEOUT = 5000;
+    static const int32_t   TELEGRAMTIMEOUT = 5000;
     static const char* TELEGRAMSERVER  = "api.telegram.org";
-    static const int   TELEGRAMPORT    = 443;
+    static const int32_t   TELEGRAMPORT    = 443;
 
-    static const int EMAILTIMEOUT = 5000;
+    static const int32_t EMAILTIMEOUT = 5000;
 
     bool        NotificationsService::_started = false;
     uint8_t     NotificationsService::_notificationType;
@@ -237,7 +237,7 @@ namespace WebUI {
             //Read & log error message (in debug mode)
             if (atMsgLevel(MsgLevelDebug)) {
                 char      errMsg[150];
-                const int lastError = Notificationclient.lastError(errMsg, sizeof(errMsg));
+                const int32_t lastError = Notificationclient.lastError(errMsg, sizeof(errMsg));
                 if (0 == lastError) {
                     errMsg[0] = 0;
                 }
@@ -405,8 +405,8 @@ namespace WebUI {
     //Email#serveraddress:port
     bool NotificationsService::getServerAddressFromSettings() {
         std::string tmp(notification_ts->get());
-        int         pos1 = tmp.find('#');
-        int         pos2 = tmp.rfind(':');
+        int32_t         pos1 = tmp.find('#');
+        int32_t         pos2 = tmp.rfind(':');
         if ((pos1 == std::string::npos) || (pos2 == std::string::npos)) {
             return false;
         }
@@ -418,7 +418,7 @@ namespace WebUI {
     //Email#serveraddress:port
     bool NotificationsService::getEmailFromSettings() {
         std::string tmp(notification_ts->get());
-        int         pos = tmp.find('#');
+        int32_t         pos = tmp.find('#');
         if (pos == std::string::npos) {
             return false;
         }

@@ -132,7 +132,7 @@ void mc_arc(float*            target,
             size_t            axis_1,
             size_t            axis_linear,
             bool              is_clockwise_arc,
-            int               pword_rotations) {
+            int32_t           pword_rotations) {
     float center[3] = { position[axis_0] + offset[axis_0], position[axis_1] + offset[axis_1], 0 };
 
     // The first two axes are the circle plane and the third is the orthogonal plane
@@ -356,7 +356,7 @@ GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, bool away, 
 
             motor_steps_to_mpos(probe_contact, probe_steps);
             coords[gc_state.modal.coord_select]->get(coord_data);  // get a copy of the current coordinate offsets
-            for (int axis = 0; axis < n_axis; axis++) {            // find the axis specified. There should only be one.
+            for (int32_t axis = 0; axis < n_axis; axis++) {        // find the axis specified. There should only be one.
                 if (offsetAxis & (1 << axis)) {
                     coord_data[axis] = probe_contact[axis] - offset;
                     break;

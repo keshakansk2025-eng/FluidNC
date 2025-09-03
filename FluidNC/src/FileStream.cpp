@@ -5,7 +5,7 @@
 #include "Machine/MachineConfig.h"  // config->
 
 std::string FileStream::path() {
-    return _fpath.u8string().c_str();
+    return reinterpret_cast<const char*>(_fpath.u8string().c_str());
 }
 
 std::string FileStream::name() {
@@ -49,7 +49,7 @@ size_t FileStream::position() {
 }
 
 void FileStream::setup(const char* mode) {
-    _fd = fopen(_fpath.u8string().c_str(), mode);
+    _fd = fopen(reinterpret_cast<const char*>(_fpath.u8string().c_str()), mode);
 
     if (!_fd) {
         bool opening = strcmp(mode, "w");
@@ -79,7 +79,7 @@ void FileStream::save() {
 }
 
 void FileStream::restore() {
-    _fd = fopen(_fpath.u8string().c_str(), _mode);
+    _fd = fopen(reinterpret_cast<const char*>(_fpath.u8string().c_str()), _mode);
     if (_fd) {
         fseek(_fd, _saved_position, SEEK_SET);
     } else {

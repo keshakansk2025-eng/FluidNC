@@ -5,14 +5,14 @@
 
 #pragma warning(disable : 4996)  // itoa
 
-std::string String::ValueToString(int value, int base) {
+std::string String::ValueToString(int32_t value, int32_t base) {
     char        buffer[100] = { 0 };
-    int         number_base = 10;
+    int32_t         number_base = 10;
     std::string output      = itoa(value, buffer, base);
     return output;
 }
 
-std::string String::DecToString(double value, int decimalPlaces) {
+std::string String::DecToString(double value, int32_t decimalPlaces) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(decimalPlaces) << value;
     std::string s = stream.str();
@@ -57,13 +57,13 @@ StringAppender& operator+(const StringAppender& lhs, unsigned char num) {
     return a;
 }
 
-StringAppender& operator+(const StringAppender& lhs, int num) {
+StringAppender& operator+(const StringAppender& lhs, int32_t num) {
     StringAppender& a = const_cast<StringAppender&>(lhs);
     a.concat(num);
     return a;
 }
 
-StringAppender& operator+(const StringAppender& lhs, unsigned int num) {
+StringAppender& operator+(const StringAppender& lhs, unsigned int32_t num) {
     StringAppender& a = const_cast<StringAppender&>(lhs);
     a.concat(num);
     return a;

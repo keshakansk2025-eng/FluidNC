@@ -6,10 +6,10 @@
 // Some useful constants.
 const float DT_SEGMENT              = (1.0f / (float(ACCELERATION_TICKS_PER_SECOND) * 60.0f));  // min/segment
 const float REQ_MM_INCREMENT_SCALAR = 1.25f;
-const int   RAMP_ACCEL              = 0;
-const int   RAMP_CRUISE             = 1;
-const int   RAMP_DECEL              = 2;
-const int   RAMP_DECEL_OVERRIDE     = 3;
+const int32_t   RAMP_ACCEL              = 0;
+const int32_t   RAMP_CRUISE             = 1;
+const int32_t   RAMP_DECEL              = 2;
+const int32_t   RAMP_DECEL_OVERRIDE     = 3;
 
 struct PrepFlag {
     uint8_t recalculate : 1;
@@ -30,4 +30,4 @@ struct PrepFlag {
 // and timer accuracy.  Do not alter these settings unless you know what you are doing.
 
 const uint32_t amassThreshold = Machine::Stepping::fStepperTimer / 8000;
-const int      maxAmassLevel  = 3;  // Each level increase doubles the threshold
+const int32_t      maxAmassLevel  = 3;  // Each level increase doubles the threshold

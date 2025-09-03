@@ -7,7 +7,7 @@
 namespace Pins {
 
     // I/O:
-    void IRAM_ATTR DebugPinDetail::write(int high) {
+    void IRAM_ATTR DebugPinDetail::write(int32_t high) {
         if (high != int(_isHigh)) {
             _isHigh = bool(high);
             if (shouldEvent()) {
@@ -17,7 +17,7 @@ namespace Pins {
         _implementation->write(high);
     }
 
-    int DebugPinDetail::read() {
+    int32_t DebugPinDetail::read() {
         auto result = _implementation->read();
         if (shouldEvent()) {
             log_msg_to(Console, "Read  " << toString() << " > " << result);
@@ -25,8 +25,8 @@ namespace Pins {
         return result;
     }
     void DebugPinDetail::setAttr(PinAttributes value, uint32_t frequency) {
-        char buf[10];
-        int  n = 0;
+        char    buf[10];
+        int32_t n = 0;
         if (value.has(PinAttributes::Input)) {
             buf[n++] = 'I';
         }

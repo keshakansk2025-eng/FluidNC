@@ -9,8 +9,8 @@
 #    include <cstdio>
 
 void TestFactory::runAll() {
-    int  i       = 0;
-    auto current = first;
+    int32_t i       = 0;
+    auto    current = first;
     while (current) {
         ++i;
         auto curTestName = current->unitTestName();
@@ -35,18 +35,18 @@ void TestFactory::runAll() {
 #    if defined _WIN32 || defined _WIN64
 #        define WIN32_LEAN_AND_MEAN
 #        include <Windows.h>
-void setColor(int colorIndex) {  // 10 = green, 12 = red, 7 = gray, 15 = white
+void setColor(int32_t colorIndex) {  // 10 = green, 12 = red, 7 = gray, 15 = white
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     // you can loop k higher to see more color choices
     // pick the colorattribute k you want
     SetConsoleTextAttribute(hConsole, colorIndex);
 }
 #    else
-void setColor(int colorIndex) {}
+void setColor(int32_t colorIndex) {}
 #    endif
 
 void TestFactory::runAll() {
-    const int Indent = 80;
+    const int32_t Indent = 80;
 
     char spaces[Indent];
     memset(spaces, ' ', Indent - 1);
@@ -68,7 +68,7 @@ void TestFactory::runAll() {
 
         printf("  - Case: %s", current->unitTestCase());
 
-        int len = int(strlen(current->unitTestCase()));
+        int32_t len = int(strlen(current->unitTestCase()));
         if (len >= (Indent - 5)) {
             len = (Indent - 5);
         }

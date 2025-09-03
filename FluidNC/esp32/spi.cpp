@@ -63,5 +63,5 @@ bool spi_init_bus(pinnum_t sck_pin, pinnum_t miso_pin, pinnum_t mosi_pin, bool d
 // cppcheck-suppress unusedFunction
 void spi_deinit_bus() {
     esp_err_t err = spi_bus_free(HSPI_HOST);
-    log_debug("deinit spi " << int(err));
+    log_debug("deinit spi " << static_cast<int32_t>(err));
 }

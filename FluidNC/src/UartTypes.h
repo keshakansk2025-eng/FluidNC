@@ -2,20 +2,20 @@
 
 #include <string>
 
-enum class UartData : int {
+enum class UartData : int32_t {
     Bits5 = 5,
     Bits6 = 6,
     Bits7 = 7,
     Bits8 = 8,
 };
 
-enum class UartStop : int {
+enum class UartStop : int32_t {
     Bits1   = 1,
     Bits1_5 = 3,
     Bits2   = 2,
 };
 
-enum class UartParity : int {
+enum class UartParity : int32_t {
     None = 0,
     Even = 2,
     Odd  = 1,

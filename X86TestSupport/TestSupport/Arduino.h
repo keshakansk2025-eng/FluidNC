@@ -10,7 +10,7 @@ class SystemRestartException {};
 
 // From Arduino.h:
 
-void delay(int ms);
+void delay(int32_t ms);
 
 // Get time in microseconds since boot.
 int64_t esp_timer_get_time();

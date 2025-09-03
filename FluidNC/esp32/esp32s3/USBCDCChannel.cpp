@@ -28,8 +28,8 @@ size_t USBCDCChannel::write(const uint8_t* buffer, size_t length) {
         char   lastchar = '\0';
         size_t j        = 0;
         while (rem) {
-            const int bufsize = 80;
-            uint8_t   modbuf[bufsize];
+            const int32_t bufsize = 80;
+            uint8_t       modbuf[bufsize];
             // bufsize-1 in case the last character is \n
             size_t k = 0;
             while (rem && k < (bufsize - 1)) {
@@ -101,12 +101,12 @@ size_t USBCDCChannel::timedReadBytes(char* buffer, size_t length, TickType_t tim
         _queue.pop();
     }
 
-    int avail = _cdc->available();
+    int32_t avail = _cdc->available();
     if (avail > remlen) {
         avail = remlen;
     }
 
-    int res = int(_cdc->read(buffer, remlen));
+    int32_t res = int(_cdc->read(buffer, remlen));
     // If res < 0, no bytes were read
     remlen -= (res < 0) ? 0 : res;
     return length - remlen;

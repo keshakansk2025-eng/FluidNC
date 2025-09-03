@@ -16,7 +16,7 @@
 // The ESP32 boot text is 115200, so you will not see early startup
 // messages from the ESP32 bootloader if you use a different baud rate,
 // and some serial monitor programs that assume 115200 might not work.
-const int BAUD_RATE = 115200;
+const int32_t BAUD_RATE = 115200;
 
 #include "esp32-hal.h"  // disableCore0WDT
 inline void platform_preinit() {

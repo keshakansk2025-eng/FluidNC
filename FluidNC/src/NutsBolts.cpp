@@ -13,9 +13,9 @@
 #include <iomanip>
 #include <string_view>
 
-const int MAX_INT_DIGITS = 8;  // Maximum number of digits in int32 (and float)
+const int32_t MAX_INT_DIGITS = 8;  // Maximum number of digits in int32 (and float)
 
-static float uint_to_float(uint32_t intval, int exp) {
+static float uint_to_float(uint32_t intval, int32_t exp) {
     float fval = (float)intval;
     // Apply decimal. Should perform no more than two floating point multiplications for the
     // expected range of E0 to E-4.

@@ -17,21 +17,21 @@ namespace WebUI {
         // We use a smaller value for safety.  There is little advantage
         // to sending too many GCode lines at once, especially since the
         // common serial communication case is typically limited to 128 bytes.
-        static const int WIFI_CLIENT_READ_BUFFER_SIZE = 1200;
+        static const int32_t WIFI_CLIENT_READ_BUFFER_SIZE = 1200;
 
-        static const int DISCONNECT_CHECK_COUNTS = 1000;
+        static const int32_t DISCONNECT_CHECK_COUNTS = 1000;
 
-        int _state = 0;
+        int32_t _state = 0;
 
     public:
         TelnetClient(WiFiClient* wifiClient);
 
-        int    rx_buffer_available() override;
+        int32_t    rx_buffer_available() override;
         size_t write(uint8_t data) override;
         size_t write(const uint8_t* buffer, size_t size) override;
-        int    read(void) override;
-        int    peek(void) override;
-        int    available() override;
+        int32_t    read(void) override;
+        int32_t    peek(void) override;
+        int32_t    available() override;
         void   flush() override {}
         void   flushRx() override;
 

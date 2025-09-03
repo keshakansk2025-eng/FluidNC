@@ -9,8 +9,8 @@
 
 #include <cstdint>
 
-const int NORMAL_TCOOLTHRS = 0xFFFFF;  // 20 bit is max
-const int NORMAL_THIGH     = 0;
+const int32_t NORMAL_TCOOLTHRS = 0xFFFFF;  // 20 bit is max
+const int32_t NORMAL_THIGH     = 0;
 
 namespace MotorDrivers {
 
@@ -78,7 +78,7 @@ namespace MotorDrivers {
         bool _diag0_otpw         = false;
         bool _diag0_int_pushpull = false;
 
-        static constexpr int _spi_freq = 100000;
+        static constexpr int32_t _spi_freq = 100000;
 
         void config_message() override;
 

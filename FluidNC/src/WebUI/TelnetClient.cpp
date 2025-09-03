@@ -32,8 +32,8 @@ namespace WebUI {
         uint8_t lastchar = '\0';
         size_t  j        = 0;
         while (rem) {
-            const int bufsize = 128;
-            uint8_t   modbuf[bufsize];
+            const int32_t bufsize = 128;
+            uint8_t       modbuf[bufsize];
             // bufsize-1 in case the last character is \n
             size_t k = 0;
             while (rem && k < (bufsize - 1)) {
@@ -55,19 +55,19 @@ namespace WebUI {
         return length;
     }
 
-    int TelnetClient::peek(void) {
+    int32_t TelnetClient::peek(void) {
         return _wifiClient->peek();
     }
 
-    int TelnetClient::available() {
+    int32_t TelnetClient::available() {
         return _wifiClient->available();
     }
 
-    int TelnetClient::rx_buffer_available() {
+    int32_t TelnetClient::rx_buffer_available() {
         return WIFI_CLIENT_READ_BUFFER_SIZE - available();
     }
 
-    int TelnetClient::read(void) {
+    int32_t TelnetClient::read(void) {
         if (_state == -1) {
             return -1;
         }

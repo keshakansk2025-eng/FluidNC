@@ -12,7 +12,7 @@
 #include <driver/gpio.h>
 #include <esp_attr.h>  // IRAM_ATTR
 
-static int i2s_out_initialized = 0;
+static int32_t i2s_out_initialized = 0;
 
 static pinnum_t i2s_out_ws_pin   = 255;
 static pinnum_t i2s_out_bck_pin  = 255;
@@ -21,14 +21,14 @@ static pinnum_t i2s_out_data_pin = 255;
 static uint32_t _pulse_delay_us;
 static uint32_t _dir_delay_us;
 
-static int _stepPulseEndTime;
+static int32_t _stepPulseEndTime;
 
 static uint32_t i2s_output_ = 0;
 static uint32_t i2s_pulse_  = 0;
 
-static int IRAM_ATTR i2s_out_gpio_shiftout(uint32_t port_data) {
+static int32_t IRAM_ATTR i2s_out_gpio_shiftout(uint32_t port_data) {
     gpio_write(i2s_out_ws_pin, 0);
-    for (int i = 0; i < 32; i++) {
+    for (int32_t i = 0; i < 32; i++) {
         gpio_write(i2s_out_data_pin, !!(port_data & (1 << (32 - 1 - i))));
         gpio_write(i2s_out_bck_pin, 1);
         gpio_write(i2s_out_bck_pin, 0);
@@ -82,11 +82,11 @@ static uint32_t init_engine(uint32_t dir_delay_us, uint32_t pulse_delay_us, uint
     return _pulse_delay_us;
 }
 
-static int init_step_pin(int step_pin, int step_invert) {
+static int32_t init_step_pin(int32_t step_pin, int32_t step_invert) {
     return step_pin;
 }
 
-static void IRAM_ATTR set_pin(int pin, int level) {
+static void IRAM_ATTR set_pin(int32_t pin, int32_t level) {
     if (level) {
         i2s_output_ |= (1 << pin);
     } else {
@@ -95,7 +95,7 @@ static void IRAM_ATTR set_pin(int pin, int level) {
     i2s_out_gpio_shiftout(i2s_output_);
 }
 
-static void IRAM_ATTR set_step_pin(int pin, int level) {
+static void IRAM_ATTR set_step_pin(int32_t pin, int32_t level) {
     if (level) {
         i2s_pulse_ |= (1 << pin);
     } else {
@@ -121,7 +121,7 @@ static void IRAM_ATTR finish_step() {
     i2s_out_gpio_shiftout(i2s_output_ ^ i2s_pulse_);
 }
 
-static int IRAM_ATTR start_unstep() {
+static int32_t IRAM_ATTR start_unstep() {
     spinUntil(_stepPulseEndTime);
     i2s_out_gpio_shiftout(i2s_output_);
     i2s_pulse_ = 0;

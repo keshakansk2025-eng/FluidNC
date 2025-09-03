@@ -220,14 +220,14 @@ bool IRAM_ATTR Stepper::pulse_func() {
                 st.exec_block_index = st.exec_segment->st_block_index;
                 st.exec_block       = &st_block_buffer[st.exec_block_index];
                 // Initialize Bresenham line and distance counters
-                for (int axis = 0; axis < n_axis; axis++) {
+                for (int32_t axis = 0; axis < n_axis; axis++) {
                     st.counter[axis] = st.exec_block->step_event_count >> 1;
                 }
             }
 
             st.dir_outbits = st.exec_block->direction_bits;
             // Adjust Bresenham axis increment counters according to AMASS level.
-            for (int axis = 0; axis < n_axis; axis++) {
+            for (int32_t axis = 0; axis < n_axis; axis++) {
                 st.steps[axis] = st.exec_block->steps[axis] >> st.exec_segment->amass_level;
             }
             // Set real-time spindle output as segment is loaded, just prior to the first step.
@@ -249,7 +249,7 @@ bool IRAM_ATTR Stepper::pulse_func() {
         }
     }
 
-    for (int axis = 0; axis < n_axis; axis++) {
+    for (int32_t axis = 0; axis < n_axis; axis++) {
         // Execute step displacement profile by Bresenham line algorithm
         st.counter[axis] += st.steps[axis];
         if (st.counter[axis] > st.exec_block->step_event_count) {
@@ -716,7 +716,7 @@ void Stepper::prep_buffer() {
         // fStepperTimer is in units of timerTicks/sec, so the dimensional analysis is
         // timerTicks/sec * 60 sec/minute * minutes = timerTicks
         uint32_t timerTicks = uint32_t(ceilf((Machine::Stepping::fStepperTimer * 60) * inv_rate));  // (timerTicks/step)
-        int      level;
+        int32_t  level;
 
         // Compute step timing and multi-axis smoothing level.
         for (level = 0; level < maxAmassLevel; level++) {

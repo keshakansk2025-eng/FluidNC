@@ -26,13 +26,13 @@ static uint32_t init_engine(uint32_t dir_delay_us, uint32_t pulse_delay_us, uint
     return _pulse_delay_us;
 }
 
-static int init_step_pin(int step_pin, int step_invert) {
+static int32_t init_step_pin(int32_t step_pin, int32_t step_invert) {
     return step_pin;
 }
 
-static int _stepPulseEndTime;
+static int32_t _stepPulseEndTime;
 
-static void IRAM_ATTR set_pin(int pin, int level) {
+static void IRAM_ATTR set_pin(int32_t pin, int32_t level) {
     gpio_write(pin, level);
 }
 
@@ -50,7 +50,7 @@ static void IRAM_ATTR finish_step() {
     _stepPulseEndTime = usToEndTicks(_pulse_delay_us);
 }
 
-static int IRAM_ATTR start_unstep() {
+static int32_t IRAM_ATTR start_unstep() {
     spinUntil(_stepPulseEndTime);
     return 0;
 }

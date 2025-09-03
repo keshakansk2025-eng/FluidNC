@@ -9,10 +9,10 @@
 // #include <algorithm>  // std::replace()
 
 class MacroEvent : public Event {
-    int _num;
+    int32_t _num;
 
 public:
-    MacroEvent(int num) : _num(num) {}
+    MacroEvent(int32_t num) : _num(num) {}
     void run(void*) const override;
 };
 
@@ -25,7 +25,7 @@ class Macro;
 namespace Machine {
     class Macros : public Configuration::Configurable {
     public:
-        static const int n_macros = 4;
+        static const int32_t n_macros = 4;
 
         static Macro _macro[];
         static Macro _startup;
@@ -62,7 +62,7 @@ namespace Machine {
 
         Macro* _macro;
 
-        Error readLine(char* line, int maxlen);
+        Error readLine(char* line, int32_t maxlen);
         void  end_message();
 
     public:

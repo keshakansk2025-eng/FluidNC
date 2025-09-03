@@ -75,8 +75,8 @@ path& path::replace_extension(const path& replacement) {
 }
 namespace {
     template <typename Iter1, typename Iter2>
-    int do_compare(Iter1 begin1, Iter1 end1, Iter2 begin2, Iter2 end2) {
-        int cmpt = 1;
+    int32_t do_compare(Iter1 begin1, Iter1 end1, Iter2 begin2, Iter2 end2) {
+        int32_t cmpt = 1;
         while (begin1 != end1 && begin2 != end2) {
             if (begin1->native() < begin2->native())
                 return -cmpt;
@@ -334,7 +334,7 @@ path path::lexically_relative(const path& base) const {
     if (a == end() && b == base.end())
         ret = ".";
     else {
-        int n = 0;
+        int32_t n = 0;
         for (; b != base.end(); ++b) {
             const path& p = *b;
             if (is_dotdot(p))

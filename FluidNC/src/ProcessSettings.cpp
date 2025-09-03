@@ -388,7 +388,7 @@ static Error home(AxisMask axisMask, Channel& out) {
     if (axisMask != Machine::Homing::AllCycles) {  // if not AllCycles we need to make sure the cycle is not prohibited
         // if there is a cycle it is the axis from $H<axis>
         auto n_axis = Axes::_numberAxis;
-        for (int axis = 0; axis < n_axis; axis++) {
+        for (int32_t axis = 0; axis < n_axis; axis++) {
             if (bitnum_is_true(axisMask, axis)) {
                 auto axisConfig     = Axes::_axis[axis];
                 auto homing         = axisConfig->_homing;
@@ -425,9 +425,9 @@ static Error home_all(const char* value, AuthenticationLevel auth_level, Channel
     // value can be a list of cycle numbers like "21", which will run homing cycle 2 then cycle 1,
     // or a list of axis names like "XZ", which will home the X and Z axes simultaneously
     if (value) {
-        int        ndigits  = 0;
+        int32_t    ndigits  = 0;
         const auto lenValue = strlen(value);
-        for (int i = 0; i < lenValue; i++) {
+        for (int32_t i = 0; i < lenValue; i++) {
             char cycleName = value[i];
             if (isdigit(cycleName)) {
                 if (!Machine::Homing::axis_mask_from_cycle(cycleName - '0')) {
@@ -442,7 +442,7 @@ static Error home_all(const char* value, AuthenticationLevel auth_level, Channel
                 log_error("Invalid homing cycle list");
                 return Error::InvalidValue;
             } else {
-                for (int i = 0; i < lenValue; i++) {
+                for (int32_t i = 0; i < lenValue; i++) {
                     char cycleName = value[i];
                     requestedAxes  = Machine::Homing::axis_mask_from_cycle(cycleName - '0');
                     retval         = home(requestedAxes, out);
@@ -482,11 +482,11 @@ static Error home_c(const char* value, AuthenticationLevel auth_level, Channel& 
 static std::string limit_set(uint32_t mask) {
     const char* motor0AxisName = "xyzabc";
     std::string s;
-    for (int axis = 0; axis < MAX_N_AXIS; axis++) {
+    for (int32_t axis = 0; axis < MAX_N_AXIS; axis++) {
         s += bitnum_is_true(mask, Machine::Axes::motor_bit(axis, 0)) ? char(motor0AxisName[axis]) : ' ';
     }
     const char* motor1AxisName = "XYZABC";
-    for (int axis = 0; axis < MAX_N_AXIS; axis++) {
+    for (int32_t axis = 0; axis < MAX_N_AXIS; axis++) {
         s += bitnum_is_true(mask, Machine::Axes::motor_bit(axis, 1)) ? char(motor1AxisName[axis]) : ' ';
     }
     return s;
@@ -607,7 +607,7 @@ const char* errorString(Error errorNumber) {
 
 static Error listErrors(const char* value, AuthenticationLevel auth_level, Channel& out) {
     if (value) {
-        int errorNumber;
+        int32_t errorNumber;
         if (!string_util::from_decimal(value, errorNumber)) {
             log_stream(out, "Malformed error number: " << value);
             return Error::InvalidValue;
@@ -649,7 +649,7 @@ static Error motor_control(const char* value, bool disable) {
         return Error::InvalidStatement;
     }
 
-    for (int i = 0; i < Axes::_numberAxis; i++) {
+    for (int32_t i = 0; i < Axes::_numberAxis; i++) {
         char axisName = axes->axisName(i);
 
         if (strchr(value, axisName) || strchr(value, tolower(axisName))) {
@@ -741,9 +741,9 @@ static Error showGPIOs(const char* value, AuthenticationLevel auth_level, Channe
 #include "UartTypes.h"
 
 static Error uartPassthrough(const char* value, AuthenticationLevel auth_level, Channel& out) {
-    int         timeout = 2000;
+    int32_t     timeout = 2000;
     std::string uart_name("auto");
-    int         uart_num;
+    int32_t     uart_num;
 
     if (value) {
         std::string_view rest(value);
@@ -809,19 +809,19 @@ static Error uartPassthrough(const char* value, AuthenticationLevel auth_level, 
         channel = nullptr;  // Leave channel null if not found
     }
 
-    bool flow;
-    int  xon_threshold;
-    int  xoff_threshold;
+    bool    flow;
+    int32_t xon_threshold;
+    int32_t xoff_threshold;
 
     if (channel) {
         channel->pause();
     }
     downstream_uart->enterPassthrough();
 
-    const int buflen = 256;
-    uint8_t   buffer[buflen];
-    size_t    upstream_len;
-    size_t    downstream_len;
+    const int32_t buflen = 256;
+    uint8_t       buffer[buflen];
+    size_t        upstream_len;
+    size_t        downstream_len;
 
     TickType_t last_ticks = xTaskGetTickCount();
 
@@ -943,7 +943,7 @@ static Error setReportInterval(const char* value, AuthenticationLevel auth_level
 }
 
 static Error sendAlarm(const char* value, AuthenticationLevel auth_level, Channel& out) {
-    int       intValue = value ? atoi(value) : 0;
+    int32_t   intValue = value ? atoi(value) : 0;
     ExecAlarm alarm    = static_cast<ExecAlarm>(intValue);
     log_debug("Sending alarm " << intValue << " " << alarmString(alarm));
     send_alarm(alarm);

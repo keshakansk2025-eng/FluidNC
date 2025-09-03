@@ -85,9 +85,13 @@ fs::path fs::absolute(const path& p, error_code& ec) {
 }
 namespace {
 #ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
-    inline bool is_dot(wchar_t c) { return c == L'.'; }
+    inline bool is_dot(wchar_t c) {
+        return c == L'.';
+    }
 #else
-    inline bool is_dot(char c) { return c == '.'; }
+    inline bool is_dot(char c) {
+        return c == '.';
+    }
 #endif
     inline bool is_dot(const fs::path& path) {
         const auto& filename = path.native();
@@ -135,7 +139,7 @@ fs::path fs::canonical(const path& p, error_code& ec) {
     deque<path> cmpts;
     for (auto& f : pa.relative_path())
         cmpts.push_back(f);
-    int max_allowed_symlinks = 40;
+    int32_t max_allowed_symlinks = 40;
     while (!cmpts.empty() && !ec) {
         path f = std::move(cmpts.front());
         cmpts.pop_front();
@@ -188,7 +192,9 @@ void fs::copy(const path& from, const path& to, copy_options options) {
 }
 namespace std::filesystem {
     // Need this as there's no 'perm_options::none' enumerator.
-    inline bool is_set(fs::perm_options obj, fs::perm_options bits) { return (obj & bits) != fs::perm_options {}; }
+    inline bool is_set(fs::perm_options obj, fs::perm_options bits) {
+        return (obj & bits) != fs::perm_options {};
+    }
 }
 #ifdef _GLIBCXX_HAVE_SYS_STAT_H
 #    ifdef NEED_DO_COPY_FILE
@@ -198,7 +204,7 @@ bool fs::do_copy_file(
     fs::file_status t, f;
     if (to_st == nullptr) {
         if (::stat(to, &st1)) {
-            const int err = errno;
+            const int32_t err = errno;
             if (!is_not_found_errno(err)) {
                 ec.assign(err, std::generic_category());
                 return false;
@@ -256,15 +262,15 @@ bool fs::do_copy_file(
             if (fd != -1)
                 ::close(fd);
         }
-        bool close() { return ::close(std::exchange(fd, -1)) == 0; }
-        int  fd;
+        bool    close() { return ::close(std::exchange(fd, -1)) == 0; }
+        int32_t fd;
     };
     CloseFD in = { ::open(from, O_RDONLY) };
     if (in.fd == -1) {
         ec.assign(errno, std::generic_category());
         return false;
     }
-    int oflag = O_WRONLY | O_CREAT;
+    int32_t oflag = O_WRONLY | O_CREAT;
     if (options.overwrite || options.update)
         oflag |= O_TRUNC;
     else
@@ -477,7 +483,7 @@ namespace {
 #ifdef _GLIBCXX_HAVE_SYS_STAT_H
         ::mode_t mode = static_cast<std::underlying_type_t<fs::perms>>(perm);
         if (::mkdir(p.c_str(), mode)) {
-            const int err = errno;
+            const int32_t err = errno;
             if (err != EEXIST || !is_directory(p))
                 ec.assign(err, std::generic_category());
             else
@@ -638,7 +644,7 @@ bool fs::equivalent(const path& p1, const path& p2) {
 }
 bool fs::equivalent(const path& p1, const path& p2, error_code& ec) noexcept {
 #ifdef _GLIBCXX_HAVE_SYS_STAT_H
-    int         err = 0;
+    int32_t     err = 0;
     file_status s1, s2;
     stat_type   st1, st2;
     if (::stat(p1.c_str(), &st1) == 0)
@@ -817,9 +823,9 @@ void fs::permissions(const path& p, perms prms, perm_options opts, error_code& e
         else if (remove)
             prms = curr & ~prms;
     }
-    int err = 0;
+    int32_t err = 0;
 #if _GLIBCXX_USE_FCHMODAT
-    const int flag = (nofollow && is_symlink(st)) ? AT_SYMLINK_NOFOLLOW : 0;
+    const int32_t flag = (nofollow && is_symlink(st)) ? AT_SYMLINK_NOFOLLOW : 0;
     if (::fchmodat(AT_FDCWD, p.c_str(), static_cast<mode_t>(prms), flag))
         err = errno;
 #else
@@ -909,7 +915,7 @@ bool fs::remove(const path& p) {
 bool fs::remove(const path& p, error_code& ec) noexcept {
     auto fs = symlink_status(p, ec);
     if (exists(fs)) {
-        int res = fs.type() == file_type::directory ? ::rmdir(p.c_str()) : ::remove(p.c_str());
+        int32_t res = fs.type() == file_type::directory ? ::rmdir(p.c_str()) : ::remove(p.c_str());
         if (res == 0) {
             ec.clear();
             return true;
@@ -1003,7 +1009,7 @@ fs::file_status fs::status(const fs::path& p, error_code& ec) noexcept {
     file_status status;
     stat_type   st;
     if (::stat(p.c_str(), &st)) {
-        int err = errno;
+        int32_t err = errno;
         ec.assign(err, std::generic_category());
         if (is_not_found_errno(err))
             status.type(file_type::not_found);
@@ -1021,7 +1027,7 @@ fs::file_status fs::symlink_status(const fs::path& p, std::error_code& ec) noexc
     file_status status;
     stat_type   st;
     if (::lstat(p.c_str(), &st)) {
-        int err = errno;
+        int32_t err = errno;
         ec.assign(err, std::generic_category());
         if (is_not_found_errno(err))
             status.type(file_type::not_found);

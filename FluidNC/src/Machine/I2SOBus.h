@@ -9,7 +9,7 @@
 
 namespace Machine {
     class I2SOBus : public Configuration::Configurable {
-        static const int NUMBER_PINS = 32;
+        static const int32_t NUMBER_PINS = 32;
 
         uint32_t portData_;
 
@@ -21,17 +21,17 @@ namespace Machine {
         Pin _ws;
         Pin _oe;
 
-        int _min_pulse_us = 2;
+        int32_t _min_pulse_us = 2;
 
         void validate() override;
         void group(Configuration::HandlerBase& handler) override;
 
         void init();
 
-        void write(int index, int high);
+        void write(int32_t index, int32_t high);
         void push();
 
-        inline int read(int index) { return !!(portData_ & bitnum_to_mask(index)); }
+        inline int32_t read(int32_t index) { return !!(portData_ & bitnum_to_mask(index)); }
 
         ~I2SOBus() = default;
     };

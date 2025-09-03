@@ -6,7 +6,7 @@
 #include "Protocol.h"
 
 // Support functions for gpio_dump
-static int exists(gpio_num_t gpio) {
+static int32_t exists(gpio_num_t gpio) {
     if (gpio == 20) {
         // GPIO20 is listed in GPIO_PIN_MUX_REG[] but it is only
         // available on the ESP32-PICO-V3 package.
@@ -14,7 +14,7 @@ static int exists(gpio_num_t gpio) {
     }
     return GPIO_PIN_MUX_REG[gpio];  // Missing GPIOs have 0 entries in this array
 }
-static int output_level(gpio_num_t gpio) {
+static int32_t output_level(gpio_num_t gpio) {
     if (gpio < 32) {
         return REG_READ(GPIO_OUT_REG) & (1 << gpio);
     } else {
@@ -22,23 +22,23 @@ static int output_level(gpio_num_t gpio) {
     }
 }
 
-static int is_input(gpio_num_t gpio) {
+static int32_t is_input(gpio_num_t gpio) {
     return GET_PERI_REG_MASK(GPIO_PIN_MUX_REG[gpio], FUN_IE);
 }
-static int is_output(gpio_num_t gpio) {
+static int32_t is_output(gpio_num_t gpio) {
     if (gpio < 32) {
         return GET_PERI_REG_MASK(GPIO_ENABLE_REG, 1 << gpio);
     } else {
         return GET_PERI_REG_MASK(GPIO_ENABLE1_REG, 1 << (gpio - 32));
     }
 }
-static int gpio_function(gpio_num_t gpio) {
+static int32_t gpio_function(gpio_num_t gpio) {
     return REG_GET_FIELD(GPIO_PIN_MUX_REG[gpio], MCU_SEL);
 }
 static uint32_t gpio_out_sel(gpio_num_t gpio) {
     return REG_READ(GPIO_FUNC0_OUT_SEL_CFG_REG + (gpio * 4));
 }
-static uint32_t gpio_in_sel(int function) {
+static uint32_t gpio_in_sel(int32_t function) {
     return REG_READ(GPIO_FUNC0_IN_SEL_CFG_REG + (function * 4));
 }
 
@@ -47,7 +47,7 @@ static uint32_t gpio_in_sel(int function) {
 std::vector<int> avail_gpios = { 0, 1, 3, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39 };
 
 struct pin_mux {
-    int         pinnum;
+    int32_t     pinnum;
     const char* pinname;
     const char* functions[6];
 } const pins[] = {
@@ -87,7 +87,7 @@ struct pin_mux {
     { 39, "SENSOR_VN", { "GPIO39", "-", "GPIO39", "-", "-", "-" } },
     { -1, "", { "" } },
 };
-const char* pin_function_name(gpio_num_t gpio, int function) {
+const char* pin_function_name(gpio_num_t gpio, int32_t function) {
     const pin_mux* p;
     for (p = pins; p->pinnum != -1; ++p) {
         if (p->pinnum == gpio) {
@@ -98,10 +98,10 @@ const char* pin_function_name(gpio_num_t gpio, int function) {
 }
 
 struct gpio_matrix_t {
-    int         num;
+    int32_t     num;
     const char* in;
     const char* out;
-    int         iomux;
+    int32_t     iomux;
 } const gpio_matrix[] = { { 0, "SPICLK_in", "SPICLK_out", true },
                           { 1, "SPIQ_in", "SPIQ_out", true },
                           { 2, "SPID_in", "SPID_out", true },
@@ -303,7 +303,7 @@ struct gpio_matrix_t {
                           { 228, "", "ig_in_func228", false },
                           { -1, "", "", false } };
 
-static const char* out_sel_name(int function) {
+static const char* out_sel_name(int32_t function) {
     const gpio_matrix_t* p;
     for (p = gpio_matrix; p->num != -1; ++p) {
         if (p->num == function) {
@@ -328,10 +328,10 @@ static void show_matrix(Print& out) {
 }
 
 void gpio_dump(Print& out) {
-    for (int gpio = 0; gpio < SOC_GPIO_PIN_COUNT; ++gpio) {
+    for (int32_t gpio = 0; gpio < SOC_GPIO_PIN_COUNT; ++gpio) {
         gpio_num_t gpio_num = static_cast<gpio_num_t>(gpio);
         if (exists(gpio_num)) {
-            out << gpio_num << " ";
+            out << static_cast<int32_t>(gpio_num) << " ";
             const char* function_name = pin_function_name(gpio_num, gpio_function(gpio_num));
             out << function_name;
             if (!strncmp(function_name, "GPIO", 4)) {
@@ -339,14 +339,14 @@ void gpio_dump(Print& out) {
                     out << " O" << output_level(gpio_num);
                 }
                 if (is_input(gpio_num)) {
-                    out << " I" << gpio_get_level(gpio_num);
+                    out << " I" << static_cast<int32_t>(gpio_get_level(gpio_num));
                 }
             }
             uint32_t out_sel = gpio_out_sel(gpio_num);
             if (out_sel != 256) {
                 out << " " << out_sel_name(out_sel);
             }
-            //            int func = gpio_function(gpio_num);
+            //            int32_t func = gpio_function(gpio_num);
             //            if (func) {
             //                out << " function " << func;
             //            }
